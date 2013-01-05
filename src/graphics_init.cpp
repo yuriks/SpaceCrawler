@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <memory>
 
 GLuint loadTexture(int* width, int* height, const char* filename) {
 	GLuint main_texture;
@@ -16,11 +17,12 @@ GLuint loadTexture(int* width, int* height, const char* filename) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	int comp;
-	unsigned char* data = stbi_load(filename, width, height, &comp, 4);
+	auto data = std::unique_ptr<unsigned char[], void(*)(void*)>(
+		stbi_load(filename, width, height, &comp, 4), &stbi_image_free);
 	if (data == nullptr)
 		return 0;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
 
 	return main_texture;
 }
