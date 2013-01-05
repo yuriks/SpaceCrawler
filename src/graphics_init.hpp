@@ -8,7 +8,7 @@
 
 #define CHECK_GL_ERROR assert(glGetError() == GL_NO_ERROR)
 
-GLuint loadTexture(int* width, int* height, const char* filename);
+GLuint loadTexture(int* width, int* height, const char* filename, bool premultiply = true);
 GLuint loadShader(const char* shader_src, GLenum shader_type);
 GLuint loadShaderProgram();
 bool initWindow(int width, int height);
