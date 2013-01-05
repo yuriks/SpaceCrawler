@@ -6,11 +6,11 @@
 #include <fstream>
 #include <memory>
 
-GLuint loadTexture(int* out_width, int* out_height, const char* filename, bool premultiply) {
-	GLuint main_texture;
-	glGenTextures(1, &main_texture);
+gl::Texture loadTexture(int* out_width, int* out_height, const char* filename, bool premultiply) {
+	gl::Texture main_texture;
+	glGenTextures(1, &main_texture.name);
 
-	glBindTexture(GL_TEXTURE_2D, main_texture);
+	glBindTexture(GL_TEXTURE_2D, main_texture.name);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -20,7 +20,7 @@ GLuint loadTexture(int* out_width, int* out_height, const char* filename, bool p
 	auto data = std::unique_ptr<unsigned char[], void(*)(void*)>(
 		stbi_load(filename, &width, &height, &comp, 4), &stbi_image_free);
 	if (data == nullptr)
-		return 0;
+		return gl::Texture();
 
 	if (premultiply) {
 		unsigned int size = width * height;
@@ -40,26 +40,25 @@ GLuint loadTexture(int* out_width, int* out_height, const char* filename, bool p
 	return main_texture;
 }
 
-GLuint loadShader(const char* shader_src, GLenum shader_type) {
-	GLuint shader = glCreateShader(shader_type);
-	glShaderSource(shader, 1, &shader_src, nullptr);
-	glCompileShader(shader);
+gl::Shader loadShader(const char* shader_src, GLenum shader_type) {
+	gl::Shader shader(glCreateShader(shader_type));
+	glShaderSource(shader.name, 1, &shader_src, nullptr);
+	glCompileShader(shader.name);
 
 	GLint compile_result;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_result);
+	glGetShaderiv(shader.name, GL_COMPILE_STATUS, &compile_result);
 
 	if (compile_result == GL_FALSE) {
 		GLint log_size;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
+		glGetShaderiv(shader.name, GL_INFO_LOG_LENGTH, &log_size);
 
 		std::vector<char> log_buf(log_size);
-		glGetShaderInfoLog(shader, log_buf.size(), nullptr, log_buf.data());
+		glGetShaderInfoLog(shader.name, log_buf.size(), nullptr, log_buf.data());
 
 		std::cerr << "Error compiling shader:\n";
 		std::cerr << log_buf.data() << std::flush;
 
-		glDeleteShader(shader);
-		return 0;
+		return gl::Shader();
 	}
 
 	return shader;
@@ -79,37 +78,36 @@ std::string loadTextFile(const std::string& filename) {
 	return ret;
 }
 
-GLuint loadShaderProgram() {
+gl::ShaderProgram loadShaderProgram() {
 	std::string vertex_shader_src = loadTextFile("vertex_shader.glsl");
 	assert(!vertex_shader_src.empty());
 	std::string fragment_shader_src = loadTextFile("fragment_shader.glsl");
 	assert(!fragment_shader_src.empty());
 
-	GLuint vertex_shader = loadShader(vertex_shader_src.c_str(), GL_VERTEX_SHADER);
-	assert(vertex_shader != 0);
-	GLuint fragment_shader = loadShader(fragment_shader_src.c_str(), GL_FRAGMENT_SHADER);
-	assert(fragment_shader != 0);
+	gl::Shader vertex_shader(loadShader(vertex_shader_src.c_str(), GL_VERTEX_SHADER));
+	assert(vertex_shader.name != 0);
+	gl::Shader fragment_shader(loadShader(fragment_shader_src.c_str(), GL_FRAGMENT_SHADER));
+	assert(fragment_shader.name != 0);
 
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
-	glLinkProgram(program);
+	gl::ShaderProgram program(glCreateProgram());
+	glAttachShader(program.name, vertex_shader.name);
+	glAttachShader(program.name, fragment_shader.name);
+	glLinkProgram(program.name);
 
 	GLint link_result;
-	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+	glGetProgramiv(program.name, GL_LINK_STATUS, &link_result);
 
 	if (link_result == GL_FALSE) {
 		GLint log_size;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_size);
+		glGetProgramiv(program.name, GL_INFO_LOG_LENGTH, &log_size);
 
 		std::vector<char> log_buf(log_size);
-		glGetProgramInfoLog(program, log_buf.size(), nullptr, log_buf.data());
+		glGetProgramInfoLog(program.name, log_buf.size(), nullptr, log_buf.data());
 
 		std::cerr << "Error linking shader program:\n";
 		std::cerr << log_buf.data() << std::flush;
 
-		glDeleteProgram(program);
-		return 0;
+		return gl::ShaderProgram();
 	}
 
 	return program;

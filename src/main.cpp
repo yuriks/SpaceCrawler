@@ -241,16 +241,16 @@ int main() {
 	}
 
 	int tex_width, tex_height;
-	GLuint main_texture = loadTexture(&tex_width, &tex_height, "graphics.png");
-	assert(main_texture != 0);
+	gl::Texture main_texture = loadTexture(&tex_width, &tex_height, "graphics.png");
+	assert(main_texture.name != 0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLuint shader_program = loadShaderProgram();
-	glUseProgram(shader_program);
+	gl::ShaderProgram shader_program = loadShaderProgram();
+	glUseProgram(shader_program.name);
 
-	GLuint u_view_matrix_location = glGetUniformLocation(shader_program, "u_view_matrix");
+	GLuint u_view_matrix_location = glGetUniformLocation(shader_program.name, "u_view_matrix");
 	GLfloat view_matrix[9] = {
 		2.0f/WINDOW_WIDTH,  0.0f,              -1.0f,
 		0.0f,              -2.0/WINDOW_HEIGHT,  1.0f,
@@ -258,13 +258,13 @@ int main() {
 	};
 	glUniformMatrix3fv(u_view_matrix_location, 1, GL_TRUE, view_matrix);
 
-	GLuint u_texture_location = glGetUniformLocation(shader_program, "u_texture");
+	GLuint u_texture_location = glGetUniformLocation(shader_program.name, "u_texture");
 	glUniform1i(u_texture_location, 0);
 
 	CHECK_GL_ERROR;
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, main_texture);
+	glBindTexture(GL_TEXTURE_2D, main_texture.name);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
