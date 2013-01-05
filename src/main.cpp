@@ -282,11 +282,7 @@ int main() {
 	glGenBuffers(1, &vbo_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, pos_x)));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, tex_s)));
-	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, color)));
-	for (int i = 0; i < 3; ++i)
-		glEnableVertexAttribArray(i);
+	VertexData::setupVertexAttribs();
 
 	GLuint ibo_id;
 	glGenBuffers(1, &ibo_id);

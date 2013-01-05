@@ -2,6 +2,16 @@
 
 #include "GL3/gl3w.h"
 
+void VertexData::setupVertexAttribs() {
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, pos_x)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, tex_s)));
+	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, color)));
+	for (int i = 0; i < 3; ++i)
+		glEnableVertexAttribArray(i);
+}
+
+///////////////////////////////////////////////////////////
+
 SpriteMatrix& SpriteMatrix::loadIdentity() {
 	m[0] = m[3] = 1.0f;
 	m[1] = m[2] = 0.0f;

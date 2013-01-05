@@ -8,6 +8,8 @@ struct VertexData {
 	GLfloat pos_x, pos_y;
 	GLfloat tex_s, tex_t;
 	std::array<GLubyte, 4> color;
+
+	static void setupVertexAttribs();
 };
 
 typedef std::array<uint8_t, 4> Color;
@@ -69,6 +71,7 @@ struct SpriteBuffer {
 	// Returns true if indices need to be updated
 	bool generate_indices();
 
+	void setupVertexAttribs();
 	void upload();
 	void draw();
 };
