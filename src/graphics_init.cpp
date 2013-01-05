@@ -6,7 +6,7 @@
 #include <fstream>
 #include <memory>
 
-GLuint loadTexture(int* width, int* height, const char* filename, bool premultiply) {
+GLuint loadTexture(int* out_width, int* out_height, const char* filename, bool premultiply) {
 	GLuint main_texture;
 	glGenTextures(1, &main_texture);
 
@@ -16,14 +16,14 @@ GLuint loadTexture(int* width, int* height, const char* filename, bool premultip
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	int comp;
+	int width, height, comp;
 	auto data = std::unique_ptr<unsigned char[], void(*)(void*)>(
-		stbi_load(filename, width, height, &comp, 4), &stbi_image_free);
+		stbi_load(filename, &width, &height, &comp, 4), &stbi_image_free);
 	if (data == nullptr)
 		return 0;
 
 	if (premultiply) {
-		unsigned int size = *width * *height;
+		unsigned int size = width * height;
 
 		for (unsigned int i = 0; i < size; ++i) {
 			unsigned char alpha = data[i*4 + 3];
@@ -33,8 +33,10 @@ GLuint loadTexture(int* width, int* height, const char* filename, bool premultip
 		}
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
 
+	*out_width = width;
+	*out_height = height;
 	return main_texture;
 }
 
