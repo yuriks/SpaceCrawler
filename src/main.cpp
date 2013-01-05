@@ -28,53 +28,22 @@ void debugPoint(int x, int y) {
 	debug_sprites.push_back(spr);
 }
 
-struct Gem {
-	fixed24_8 pos_x;
-	fixed24_8 pos_y;
+typedef fixed24_8 PositionFixed;
 
-	fixed16_16 vel_x;
-	fixed16_16 vel_y;
-
-	int score_value;
-	static const int MAX_VALUE = 10000;
-	static const int INITIAL_VALUE = 100;
-
-	static const int RADIUS = 8;
-	static const int MERGE_SPEED = 4;
+struct Ship {
+	PositionFixed pos_x, pos_y;
+	vec2 vel;
+	float angle;
 };
-
-struct Paddle {
-	fixed24_8 pos_x;
-	fixed24_8 pos_y;
-
-	fixed8_24 rotation;
-
-	SpriteMatrix getSpriteMatrix() const {
-		return SpriteMatrix().loadIdentity().rotate(rotation.toFloat());
-	};
-};
-
-static const fixed24_8 PADDLE_MOVEMENT_SPEED(6);
-static const fixed8_24 PADDLE_MAX_ROTATION(10);
-static const fixed8_24 PADDLE_ROTATION_RATE(3);
-static const fixed8_24 PADDLE_ROTATION_RETURN_RATE(1);
 
 struct GameState {
 	RandomGenerator rng;
 
-	Paddle paddle;
-	std::vector<Gem> gems;
-
-	int score;
-	int lives;
-
-	GameState()
-		: score(0), lives(5)
-	{ }
+	Ship player_ship;
 };
 
-static const int WINDOW_WIDTH = 160;
-static const int WINDOW_HEIGHT = 240;
+static const int WINDOW_WIDTH = 640;
+static const int WINDOW_HEIGHT = 480;
 
 // Splits vector vel into components parallel and perpendicular to the normal
 // of the plane n.
@@ -84,36 +53,7 @@ void splitVector(vec2 vel, vec2 n, vec2* out_par, vec2* out_perp) {
 	*out_perp = vel - par;
 }
 
-void collideBallWithBoundary(Gem& ball) {
-	// Left boundary
-	if (ball.pos_x - Gem::RADIUS < 0) {
-		ball.vel_x = -ball.vel_x;
-		ball.pos_x = Gem::RADIUS;
-	}
-
-	// Right boundary
-	if (ball.pos_x + Gem::RADIUS > WINDOW_WIDTH) {
-		ball.vel_x = -ball.vel_x;
-		ball.pos_x = WINDOW_WIDTH - Gem::RADIUS;
-	}
-
-	// Top boundary
-	/*
-	if (ball.pos_y - Gem::RADIUS < 0) {
-		ball.vel_y = -ball.vel_y;
-		ball.pos_y = Gem::RADIUS;
-	}
-	*/
-
-	// Bottom boundary
-	/*
-	if (ball.pos_y + Gem::RADIUS > WINDOW_HEIGHT) {
-		ball.vel_y = -ball.vel_y;
-		ball.pos_y = WINDOW_HEIGHT - Gem::RADIUS;
-	}
-	*/
-}
-
+#if 0
 void collideBallWithBall(Gem& a, Gem& b) {
 	vec2 dv = {(a.pos_x - b.pos_x).toFloat(), (a.pos_y - b.pos_y).toFloat()};
 	float d_sqr = length_sqr(dv);
@@ -177,6 +117,7 @@ void collideBallWithBall(Gem& a, Gem& b) {
 		}
 	}
 }
+#endif
 
 // Returns the nearest point in line segment a-b to point p.
 vec2 pointLineSegmentNearestPoint(vec2 p, vec2 a, vec2 b) {
@@ -196,6 +137,7 @@ vec2 pointLineSegmentNearestPoint(vec2 p, vec2 a, vec2 b) {
 	}
 }
 
+#if 0
 void collideBallWithPaddle(Gem& ball, const Paddle& paddle) {
 	SpriteMatrix matrix = paddle.getSpriteMatrix();
 
@@ -240,6 +182,7 @@ void collideBallWithPaddle(Gem& ball, const Paddle& paddle) {
 		ball.vel_y = fixed16_16(vel.y);
 	}
 }
+#endif
 
 void hsvToRgb(float h, float s, float v, float* out_r, float* out_g, float* out_b) {
 	// Taken from http://www.cs.rit.edu/~ncs/color/t_convert.html
@@ -266,13 +209,6 @@ void hsvToRgb(float h, float s, float v, float* out_r, float* out_g, float* out_
 	default: assert(false);
 	}
 #undef CASE
-}
-
-float mapScoreToHue(int score_value) {
-	score_value -= Gem::INITIAL_VALUE;
-
-	float score_range = static_cast<float>(score_value) / (Gem::MAX_VALUE - Gem::INITIAL_VALUE);
-	return std::sqrt(score_range) * 300.0f;
 }
 
 struct FontInfo {
@@ -363,22 +299,6 @@ int main() {
 	RandomGenerator& rng = game_state.rng;
 	rng.seed(123);
 
-	{
-		Paddle& p = game_state.paddle;
-		p.pos_x = WINDOW_WIDTH / 2;
-		p.pos_y = WINDOW_HEIGHT - 32;
-		p.rotation = 0;
-	}
-
-	Sprite paddle_spr;
-	paddle_spr.setImg(0, 0, 64, 16);
-
-	Sprite gem_spr;
-	gem_spr.setImg(0, 16, 16, 16);
-
-	static const int GEM_SPAWN_INTERVAL = 60*2;
-	int gem_spawn_timer = GEM_SPAWN_INTERVAL;
-
 	CHECK_GL_ERROR;
 
 	////////////////////
@@ -386,102 +306,9 @@ int main() {
 	////////////////////
 	bool running = true;
 	while (running) {
-		/* Update paddle */
-		{
-			Paddle& paddle = game_state.paddle;
-
-			fixed24_8 paddle_speed(0);
-			fixed8_24 rotation = 0;
-			if (glfwGetKey(GLFW_KEY_LEFT)) {
-				paddle_speed -= PADDLE_MOVEMENT_SPEED;
-				rotation -= PADDLE_ROTATION_RATE;
-			}
-			if (glfwGetKey(GLFW_KEY_RIGHT)) {
-				paddle_speed += PADDLE_MOVEMENT_SPEED;
-				rotation += PADDLE_ROTATION_RATE;
-			}
-
-			if (rotation == 0) {
-				paddle.rotation = stepTowards(paddle.rotation, fixed8_24(0), PADDLE_ROTATION_RETURN_RATE);
-			} else {
-				paddle.rotation = clamp(-PADDLE_MAX_ROTATION, paddle.rotation + rotation, PADDLE_MAX_ROTATION);
-			}
-			paddle.pos_x += paddle_speed;
-		}
-
-		/* Spawn new gems */
-		if (--gem_spawn_timer == 0) {
-			gem_spawn_timer = GEM_SPAWN_INTERVAL;
-
-			Gem b;
-			b.pos_x = randRange(rng, WINDOW_WIDTH * 1 / 6, WINDOW_WIDTH * 5 / 6);
-			b.pos_y = -10;
-			b.vel_x = b.vel_y = 0;
-			b.score_value = Gem::INITIAL_VALUE;
-
-			game_state.gems.push_back(b);
-		}
-
-		/* Update balls */
-		for (unsigned int i = 0; i < game_state.gems.size(); ++i) {
-			Gem& ball = game_state.gems[i];
-
-			ball.vel_y += fixed16_16(0, 1, 8);
-
-			ball.pos_x += fixed24_8(ball.vel_x);
-			ball.pos_y += fixed24_8(ball.vel_y);
-
-			collideBallWithBoundary(ball);
-			for (unsigned int j = i + 1; j < game_state.gems.size(); ++j) {
-				collideBallWithBall(ball, game_state.gems[j]);
-			}
-			collideBallWithPaddle(ball, game_state.paddle);
-		}
-
-		/* Clean up dead gems */
-		remove_if(game_state.gems, [](const Gem& gem) {
-			return gem.pos_y > WINDOW_HEIGHT + 128 && gem.vel_y > 0;
-		});
-
 		/* Draw scene */
 		sprite_buffer.clear();
 		
-		paddle_spr.setPos(game_state.paddle.pos_x.integer(), game_state.paddle.pos_y.integer());
-		sprite_buffer.append(paddle_spr, game_state.paddle.getSpriteMatrix());
-
-		for (const Gem& gem : game_state.gems) {
-			gem_spr.setPos(gem.pos_x.integer() - gem_spr.img_w / 2, gem.pos_y.integer() - gem_spr.img_h / 2);
-			float r, g, b;
-			hsvToRgb(mapScoreToHue(gem.score_value), 1.0f, 1.0f, &r, &g, &b);
-			gem_spr.color = makeColor(uint8_t(r*255 + 0.5f), uint8_t(g*255 + 0.5f), uint8_t(b*255 + 0.5f), 255);
-			sprite_buffer.append(gem_spr);
-		}
-
-		// HUD
-		{
-			static const int HUD_X_POS = 2;
-			static const int HUD_Y_POS = 2;
-
-			Sprite hud_spr;
-			hud_spr.setImg(64, 0, 29, 11);
-			hud_spr.setPos(HUD_X_POS, HUD_Y_POS);
-			sprite_buffer.append(hud_spr);
-
-			hud_spr.setImg(64, 12, 29, 11);
-			hud_spr.setPos(HUD_X_POS, HUD_Y_POS + 13);
-			sprite_buffer.append(hud_spr);
-
-			int s = 0;
-			for (Gem& g : game_state.gems) {
-				s += g.score_value;
-			}
-			game_state.score = s;
-
-			std::string score_text = std::to_string(game_state.score);
-			FontInfo font('0', 40, 24, 8, 12);
-			drawText(HUD_X_POS + 31, HUD_Y_POS, score_text, sprite_buffer, font);
-		}
-
 		/* Submit sprites */
 		// More superfluous drawcalls to change the GPU into high-performance mode? Sure, why not.
 		glClear(GL_COLOR_BUFFER_BIT);
