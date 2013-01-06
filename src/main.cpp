@@ -17,6 +17,9 @@
 #include "vec2.hpp"
 #include "graphics_init.hpp"
 #include "texture.hpp"
+#include "game_types.hpp"
+#include "GameState.hpp"
+#include "DrawState.hpp"
 
 std::vector<Sprite> debug_sprites;
 
@@ -28,32 +31,6 @@ void debugPoint(int x, int y) {
 
 	debug_sprites.push_back(spr);
 }
-
-typedef fixed24_8 PositionFixed;
-
-struct Ship {
-	PositionFixed pos_x, pos_y;
-	vec2 vel;
-	float angle;
-
-	void draw(SpriteBuffer& sprite_buffer) const {
-		Sprite ship_spr;
-		ship_spr.setImg(0, 0, 32, 24);
-		ship_spr.setPos(pos_x.integer(), pos_y.integer());
-		sprite_buffer.append(ship_spr);
-	}
-};
-
-struct GameState {
-	RandomGenerator rng;
-
-	Ship player_ship;
-};
-
-#define DATA_PATH "data/"
-
-static const int WINDOW_WIDTH = 640;
-static const int WINDOW_HEIGHT = 480;
 
 // Splits vector vel into components parallel and perpendicular to the normal
 // of the plane n.
@@ -244,11 +221,6 @@ void drawText(int x, int y, const std::string& text, SpriteBuffer& buffer, const
 	}
 }
 
-struct DrawState {
-	SpriteBufferIndices sprite_buffer_indices;
-	SpriteBuffer sprite_buffer;
-};
-
 void drawScene(const GameState& game_state, DrawState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
@@ -271,6 +243,16 @@ void drawScene(const GameState& game_state, DrawState& draw_state) {
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
+void updateScene(GameState& game_state) {
+	InputButtons::Bitset input;
+	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
+	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
+	input.set(InputButtons::THRUST, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
+	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
+
+	game_state.player_ship.update(input);
+}
+
 int main() {
 	if (!initWindow(WINDOW_WIDTH, WINDOW_HEIGHT)) {
 		std::cerr << "Failed to initialize window.\n";
@@ -278,7 +260,7 @@ int main() {
 	}
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	gl::ShaderProgram shader_program = loadShaderProgram();
 	glUseProgram(shader_program.name);
@@ -331,6 +313,7 @@ int main() {
 	////////////////////
 	bool running = true;
 	while (running) {
+		updateScene(game_state);
 		drawScene(game_state, draw_state);
 
 		glfwSwapBuffers();
