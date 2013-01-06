@@ -3,6 +3,10 @@
 #include <vector>
 #include <cstdint>
 #include <array>
+#include "graphics_init.hpp"
+#include "texture.hpp"
+#include "gl/Buffer.hpp"
+#include "gl/VertexArray.hpp"
 
 struct VertexData {
 	GLfloat pos_x, pos_y;
@@ -51,15 +55,23 @@ struct SpriteMatrix {
 	void transform(float* x, float* y);
 };
 
-struct SpriteBuffer {
-	std::vector<VertexData> vertices;
+struct SpriteBufferIndices {
 	std::vector<GLushort> indices;
-
-	unsigned int vertex_count;
 	unsigned int index_count;
 
-	float tex_width;
-	float tex_height;
+	gl::Buffer ibo;
+
+	SpriteBufferIndices();
+	void update(unsigned int sprite_count);
+};
+
+struct SpriteBuffer {
+	std::vector<VertexData> vertices;
+
+	unsigned int sprite_count;
+	gl::Buffer vbo;
+	gl::VertexArray vao;
+	TextureInfo texture;
 
 	SpriteBuffer();
 
@@ -68,10 +80,5 @@ struct SpriteBuffer {
 	// Careful: spr position gives center of sprite, not top-left
 	void append(const Sprite& spr, const SpriteMatrix& matrix);
 
-	// Returns true if indices need to be updated
-	bool generate_indices();
-
-	void setupVertexAttribs();
-	void upload();
-	void draw();
+	void draw(SpriteBufferIndices& indices) const;
 };

@@ -16,6 +16,7 @@
 #include "SpriteBuffer.hpp"
 #include "vec2.hpp"
 #include "graphics_init.hpp"
+#include "texture.hpp"
 
 std::vector<Sprite> debug_sprites;
 
@@ -34,6 +35,13 @@ struct Ship {
 	PositionFixed pos_x, pos_y;
 	vec2 vel;
 	float angle;
+
+	void draw(SpriteBuffer& sprite_buffer) const {
+		Sprite ship_spr;
+		ship_spr.setImg(0, 0, 32, 24);
+		ship_spr.setPos(pos_x.integer(), pos_y.integer());
+		sprite_buffer.append(ship_spr);
+	}
 };
 
 struct GameState {
@@ -41,6 +49,8 @@ struct GameState {
 
 	Ship player_ship;
 };
+
+#define DATA_PATH "data/"
 
 static const int WINDOW_WIDTH = 640;
 static const int WINDOW_HEIGHT = 480;
@@ -234,15 +244,38 @@ void drawText(int x, int y, const std::string& text, SpriteBuffer& buffer, const
 	}
 }
 
+struct DrawState {
+	SpriteBufferIndices sprite_buffer_indices;
+	SpriteBuffer sprite_buffer;
+};
+
+void drawScene(const GameState& game_state, DrawState& draw_state) {
+	/* Draw scene */
+	draw_state.sprite_buffer.clear();
+
+	game_state.player_ship.draw(draw_state.sprite_buffer);
+
+	/* Submit sprites */
+	// More superfluous drawcalls to change the GPU into high-performance mode? Sure, why not.
+	glClear(GL_COLOR_BUFFER_BIT);
+	for (int i = 0; i < 1000; ++i) {
+		draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
+	}
+
+	for (const Sprite& spr : debug_sprites) {
+		draw_state.sprite_buffer.append(spr);
+	}
+	debug_sprites.clear();
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
+}
+
 int main() {
 	if (!initWindow(WINDOW_WIDTH, WINDOW_HEIGHT)) {
 		std::cerr << "Failed to initialize window.\n";
 		return 1;
 	}
-
-	int tex_width, tex_height;
-	gl::Texture main_texture = loadTexture(&tex_width, &tex_height, "graphics.png");
-	assert(main_texture.name != 0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -264,29 +297,19 @@ int main() {
 	CHECK_GL_ERROR;
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, main_texture.name);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	CHECK_GL_ERROR;
 
-	SpriteBuffer sprite_buffer;
-	sprite_buffer.tex_width = static_cast<float>(tex_width);
-	sprite_buffer.tex_height = static_cast<float>(tex_height);
+	DrawState draw_state;
+	CHECK_GL_ERROR;
+	{
+		SpriteBuffer& sprite_buffer = draw_state.sprite_buffer;
+		sprite_buffer.texture = loadTexture(DATA_PATH "player-ship.png");
+	}
 
-	GLuint vao_id;
-	glGenVertexArrays(1, &vao_id);
-	glBindVertexArray(vao_id);
-
-	GLuint vbo_id;
-	glGenBuffers(1, &vbo_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-	VertexData::setupVertexAttribs();
-
-	GLuint ibo_id;
-	glGenBuffers(1, &ibo_id);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
+	CHECK_GL_ERROR;
 
 	///////////////////////////
 	// Initialize game state //
@@ -295,32 +318,20 @@ int main() {
 	RandomGenerator& rng = game_state.rng;
 	rng.seed(123);
 
-	CHECK_GL_ERROR;
+	{
+		Ship& ship = game_state.player_ship;
+		ship.angle = 0;
+		ship.pos_x = WINDOW_WIDTH / 2;
+		ship.pos_y = WINDOW_HEIGHT / 2;
+		ship.vel = mvec2(0.0f, 0.0f);
+	}
 
 	////////////////////
 	// Main game loop //
 	////////////////////
 	bool running = true;
 	while (running) {
-		/* Draw scene */
-		sprite_buffer.clear();
-		
-		/* Submit sprites */
-		// More superfluous drawcalls to change the GPU into high-performance mode? Sure, why not.
-		glClear(GL_COLOR_BUFFER_BIT);
-		for (int i = 0; i < 1000; ++i) {
-			sprite_buffer.upload();
-			sprite_buffer.draw();
-		}
-
-		for (const Sprite& spr : debug_sprites) {
-			sprite_buffer.append(spr);
-		}
-		debug_sprites.clear();
-
-		glClear(GL_COLOR_BUFFER_BIT);
-		sprite_buffer.upload();
-		sprite_buffer.draw();
+		drawScene(game_state, draw_state);
 
 		glfwSwapBuffers();
 		running = running && glfwGetWindowParam(GLFW_OPENED);

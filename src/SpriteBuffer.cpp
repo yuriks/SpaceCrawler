@@ -3,11 +3,15 @@
 #include "GL3/gl3w.h"
 
 void VertexData::setupVertexAttribs() {
+	CHECK_GL_ERROR_PARANOID;
+
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, pos_x)));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, tex_s)));
 	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, color)));
 	for (int i = 0; i < 3; ++i)
 		glEnableVertexAttribArray(i);
+
+	CHECK_GL_ERROR_PARANOID;
 }
 
 ///////////////////////////////////////////////////////////
@@ -78,21 +82,69 @@ void SpriteMatrix::transform(float* x, float* y) {
 
 ///////////////////////////////////////////////////////////
 
+SpriteBufferIndices::SpriteBufferIndices()
+	: index_count(0)
+{
+	CHECK_GL_ERROR_PARANOID;
+
+	glGenBuffers(1, &ibo.name);
+
+	CHECK_GL_ERROR_PARANOID;
+}
+
+void SpriteBufferIndices::update(unsigned int sprite_count) {
+	CHECK_GL_ERROR_PARANOID;
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.name);
+	if (index_count >= sprite_count)
+		return;
+
+	indices.reserve(sprite_count * 6);
+	for (unsigned int i = index_count; i < sprite_count; ++i) {
+		unsigned short base_i = i * 4;
+
+		indices.push_back(base_i + 0);
+		indices.push_back(base_i + 1);
+		indices.push_back(base_i + 3);
+
+		indices.push_back(base_i + 3);
+		indices.push_back(base_i + 1);
+		indices.push_back(base_i + 2);
+	}
+
+	index_count = sprite_count;
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*indices.size(), indices.data(), GL_STREAM_DRAW);
+
+	CHECK_GL_ERROR_PARANOID;
+}
+
 SpriteBuffer::SpriteBuffer() :
-	vertex_count(0), index_count(0),
-	tex_width(1.0f), tex_height(1.0f)
-{ }
+	sprite_count(0)
+{
+	CHECK_GL_ERROR_PARANOID;
+
+	glGenVertexArrays(1, &vao.name);
+	glBindVertexArray(vao.name);
+
+	glGenBuffers(1, &vbo.name);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
+
+	VertexData::setupVertexAttribs();
+
+	CHECK_GL_ERROR_PARANOID;
+}
 
 void SpriteBuffer::clear() {
 	vertices.clear();
-	vertex_count = 0;
+	sprite_count = 0;
 }
 
 void SpriteBuffer::append(const Sprite& spr) {
-	float img_x = spr.img_x / tex_width;
-	float img_w = spr.img_w / tex_width;
-	float img_y = spr.img_y / tex_height;
-	float img_h = spr.img_h / tex_height;
+	float img_x = spr.img_x / static_cast<float>(texture.width);
+	float img_w = spr.img_w / static_cast<float>(texture.width);
+	float img_y = spr.img_y / static_cast<float>(texture.height);
+	float img_h = spr.img_h / static_cast<float>(texture.height);
 
 	VertexData v;
 	v.color = spr.color;
@@ -115,14 +167,14 @@ void SpriteBuffer::append(const Sprite& spr) {
 	v.tex_s = img_x;
 	vertices.push_back(v);
 
-	vertex_count += 1;
+	sprite_count += 1;
 }
 
 void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
-	float img_x = spr.img_x / tex_width;
-	float img_w = spr.img_w / tex_width;
-	float img_y = spr.img_y / tex_height;
-	float img_h = spr.img_h / tex_height;
+	float img_x = spr.img_x / static_cast<float>(texture.width);
+	float img_w = spr.img_w / static_cast<float>(texture.width);
+	float img_y = spr.img_y / static_cast<float>(texture.height);
+	float img_h = spr.img_h / static_cast<float>(texture.height);
 
 	VertexData v;
 	v.color = spr.color;
@@ -156,38 +208,17 @@ void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
 	v.tex_s = img_x;
 	vertices.push_back(v);
 
-	vertex_count += 1;
+	sprite_count += 1;
 }
 
-// Returns true if indices need to be updated
-bool SpriteBuffer::generate_indices() {
-	if (index_count >= vertex_count)
-		return false;
+void SpriteBuffer::draw(SpriteBufferIndices& indices) const {
+	CHECK_GL_ERROR_PARANOID;
 
-	indices.reserve(vertex_count * 6);
-	for (unsigned int i = index_count; i < vertex_count; ++i) {
-		unsigned short base_i = i * 4;
-
-		indices.push_back(base_i + 0);
-		indices.push_back(base_i + 1);
-		indices.push_back(base_i + 3);
-
-		indices.push_back(base_i + 3);
-		indices.push_back(base_i + 1);
-		indices.push_back(base_i + 2);
-	}
-
-	index_count = vertex_count;
-	return true;
-}
-
-void SpriteBuffer::upload() {
-	if (generate_indices()) {
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*indices.size(), indices.data(), GL_STREAM_DRAW);
-	}
+	glBindVertexArray(vao.name);
+	indices.update(sprite_count);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData)*vertices.size(), vertices.data(), GL_STREAM_DRAW);
-}
+	glBindTexture(GL_TEXTURE_2D, texture.handle.name);
+	glDrawElements(GL_TRIANGLES, sprite_count * 6, GL_UNSIGNED_SHORT, nullptr);
 
-void SpriteBuffer::draw() {
-	glDrawElements(GL_TRIANGLES, vertex_count * 6, GL_UNSIGNED_SHORT, nullptr);
+	CHECK_GL_ERROR_PARANOID;
 }

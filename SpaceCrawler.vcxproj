@@ -81,6 +81,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\SpriteBuffer.cpp" />
     <ClCompile Include="src\stb_image.c" />
+    <ClCompile Include="src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Fixed.hpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="src\graphics_init.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
     <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\texture.hpp" />
     <ClInclude Include="src\util.hpp" />
     <ClInclude Include="src\vec2.hpp" />
   </ItemGroup>
