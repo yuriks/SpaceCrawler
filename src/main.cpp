@@ -288,7 +288,7 @@ int main() {
 	CHECK_GL_ERROR;
 	{
 		SpriteBuffer& sprite_buffer = draw_state.sprite_buffer;
-		sprite_buffer.texture = loadTexture(DATA_PATH "player-ship.png");
+		sprite_buffer.texture = loadTexture("player-ship.png");
 	}
 
 	CHECK_GL_ERROR;

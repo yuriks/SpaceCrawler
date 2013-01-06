@@ -79,6 +79,7 @@
     <ClCompile Include="src\GL3\gl3w.c" />
     <ClCompile Include="src\graphics_init.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\resources.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\SpriteBuffer.cpp" />
     <ClCompile Include="src\stb_image.c" />
@@ -97,6 +98,7 @@
     <ClInclude Include="src\gl\Texture.hpp" />
     <ClInclude Include="src\gl\VertexArray.hpp" />
     <ClInclude Include="src\graphics_init.hpp" />
+    <ClInclude Include="src\resources.hpp" />
     <ClInclude Include="src\Ship.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
     <ClInclude Include="src\stb_image.h" />

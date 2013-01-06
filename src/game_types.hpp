@@ -16,7 +16,5 @@ namespace InputButtons {
 	typedef std::bitset<InputButtons::MAX> Bitset;
 }
 
-#define DATA_PATH "data/"
-
 static const int WINDOW_WIDTH = 640;
 static const int WINDOW_HEIGHT = 480;

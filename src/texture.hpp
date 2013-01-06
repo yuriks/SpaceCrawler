@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gl/Texture.hpp"
+#include <string>
 
 struct TextureInfo {
 	gl::Texture handle;
@@ -23,5 +24,5 @@ private:
 	NONCOPYABLE(TextureInfo);
 };
 
-gl::Texture loadTexture(int* out_width, int* out_height, const char* filename, bool premultiply = true);
-TextureInfo loadTexture(const char* filename, bool premultiply = true);
+gl::Texture loadTexture(int* out_width, int* out_height, const std::string& filename, bool premultiply = true);
+TextureInfo loadTexture(const std::string& filename, bool premultiply = true);

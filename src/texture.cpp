@@ -2,10 +2,11 @@
 
 #include "stb_image.h"
 #include "GL3/gl3w.h"
+#include "resources.hpp"
 #include <memory>
 #include <cassert>
 
-gl::Texture loadTexture(int* out_width, int* out_height, const char* filename, bool premultiply) {
+gl::Texture loadTexture(int* out_width, int* out_height, const std::string& filename, bool premultiply) {
 	gl::Texture main_texture;
 	glGenTextures(1, &main_texture.name);
 
@@ -17,7 +18,7 @@ gl::Texture loadTexture(int* out_width, int* out_height, const char* filename, b
 
 	int width, height, comp;
 	auto data = std::unique_ptr<unsigned char[], void(*)(void*)>(
-		stbi_load(filename, &width, &height, &comp, 4), &stbi_image_free);
+		stbi_load(filename.c_str(), &width, &height, &comp, 4), &stbi_image_free);
 	if (data == nullptr)
 		return gl::Texture();
 
@@ -39,9 +40,9 @@ gl::Texture loadTexture(int* out_width, int* out_height, const char* filename, b
 	return main_texture;
 }
 
-TextureInfo loadTexture(const char* filename, bool premultiply) {
+TextureInfo loadTexture(const std::string& filename, bool premultiply) {
 	TextureInfo tex;
-	tex.handle = loadTexture(&tex.width, &tex.height, filename, premultiply);
+	tex.handle = loadTexture(&tex.width, &tex.height, data_path + filename, premultiply);
 	assert(tex.handle.name != 0);
 	return tex;
 }
