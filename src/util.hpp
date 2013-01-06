@@ -34,14 +34,14 @@ void remove_if(C& container, const F& predicate) {
 
 typedef std::mt19937 RandomGenerator;
 
-int randRange(RandomGenerator& r, int min, int max) {
+inline int randRange(RandomGenerator& r, int min, int max) {
 	return std::uniform_int_distribution<>(min, max)(r);
 }
 
-int randRange(RandomGenerator& r, int max) {
+inline int randRange(RandomGenerator& r, int max) {
 	return randRange(r, 0, max);
 }
 
-bool randBool(RandomGenerator& r) {
+inline bool randBool(RandomGenerator& r) {
 	return randRange(r, 1) == 1;
 }
