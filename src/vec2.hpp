@@ -4,19 +4,21 @@ struct vec2 {
 	float x, y;
 };
 
-inline vec2 operator +(const vec2 a, const vec2 b) {
-	vec2 tmp = {a.x + b.x, a.y + b.y};
+inline vec2 mvec2(float x, float y) {
+	vec2 tmp = {x, y};
 	return tmp;
+}
+
+inline vec2 operator +(const vec2 a, const vec2 b) {
+	return mvec2(a.x + b.x, a.y + b.y);
 }
 
 inline vec2 operator -(const vec2 a, const vec2 b) {
-	vec2 tmp = {a.x - b.x, a.y - b.y};
-	return tmp;
+	return mvec2(a.x - b.x, a.y - b.y);
 }
 
 inline vec2 operator *(const float s, const vec2 v) {
-	vec2 tmp = {s*v.x, s*v.y};
-	return tmp;
+	return mvec2(s*v.x, s*v.y);
 }
 
 inline vec2 operator *(const vec2 v, const float s) {
@@ -24,18 +26,15 @@ inline vec2 operator *(const vec2 v, const float s) {
 }
 
 inline vec2 operator /(const float s, const vec2 v) {
-	vec2 tmp = {s/v.x, s/v.y};
-	return tmp;
+	return mvec2(s/v.x, s/v.y);
 }
 
 inline vec2 operator /(const vec2 v, const float s) {
-	vec2 tmp = {v.x/s, v.y/s};
-	return tmp;
+	return mvec2(v.x/s, v.y/s);
 }
 
 inline vec2 operator -(const vec2 v) {
-	vec2 tmp = {-v.x, -v.y};
-	return tmp;
+	return mvec2(-v.x, -v.y);
 }
 
 inline float dot(const vec2 a, const vec2 b) {
