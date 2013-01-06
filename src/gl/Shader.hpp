@@ -1,13 +1,12 @@
 #pragma once
 
 #include <algorithm>
-#include <boost/noncopyable.hpp>
-
 #include "GL3/gl3w.h"
+#include "util.hpp"
 
 namespace gl {
 
-struct Shader : private boost::noncopyable {
+struct Shader {
 	GLuint name;
 
 	Shader()
@@ -32,6 +31,9 @@ struct Shader : private boost::noncopyable {
 		if (name != 0)
 			glDeleteShader(name);
 	}
+
+private:
+	NONCOPYABLE(Shader);
 };
 
 } // namespace gl

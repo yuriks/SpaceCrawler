@@ -1,13 +1,12 @@
 #pragma once
 
 #include <algorithm>
-#include <boost/noncopyable.hpp>
-
 #include "GL3/gl3w.h"
+#include "util.hpp"
 
 namespace gl {
 
-struct Texture : private boost::noncopyable {
+struct Texture {
 	GLuint name;
 
 	Texture()
@@ -26,12 +25,16 @@ struct Texture : private boost::noncopyable {
 
 	Texture& operator=(Texture&& o) {
 		std::swap(name, o.name);
+		return *this;
 	}
 
 	~Texture() {
 		if (name != 0)
 			glDeleteTextures(1, &name);
 	}
+
+private:
+	NONCOPYABLE(Texture);
 };
 
 } // namespace gl

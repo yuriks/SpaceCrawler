@@ -3,6 +3,8 @@
 #include <random>
 #include <algorithm>
 
+#define NONCOPYABLE(cls) cls(const cls&); const cls& operator=(const cls&)
+
 template <typename T>
 T stepTowards(T initial, T target, T step) {
 	if (initial < target) {
