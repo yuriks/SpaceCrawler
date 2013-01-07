@@ -13,26 +13,40 @@ void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	matrix.loadIdentity().rotate(angle);
 
 	sprite_buffer.append(ship_spr, matrix);
+
+	if (anim_flags.test(AnimationFlags::THRUST_FORWARD)) {
+		ship_spr.setImg(0, 1*24, 32, 24);
+		sprite_buffer.append(ship_spr, matrix);
+	}
+
+	if (anim_flags.test(AnimationFlags::INERTIAL_BRAKE)) {
+		ship_spr.setImg(0, 2*24, 32, 24);
+		sprite_buffer.append(ship_spr, matrix);
+	}
 }
 
 void Ship::update(InputButtons::Bitset& input) {
 	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 
+	anim_flags.reset();
+
 	if (input.test(InputButtons::LEFT)) {
 		angle -= TURNING_SPEED;
+		anim_flags.set(AnimationFlags::THRUST_CCW);
 	}
 
 	if (input.test(InputButtons::RIGHT)) {
 		angle += TURNING_SPEED;
+		anim_flags.set(AnimationFlags::THRUST_CW);
 	}
 
 	if (input.test(InputButtons::THRUST)) {
 		vec2 accel = 0.05f * complex_from_angle(angle);
 		vel = vel + accel;
-	}
-
-	if (input.test(InputButtons::BRAKE)) {
+		anim_flags.set(AnimationFlags::THRUST_FORWARD);
+	} else if (input.test(InputButtons::BRAKE)) {
 		vel = vel * 0.96f;
+		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
 	}
 
 	pos_x += PositionFixed(vel.x);
