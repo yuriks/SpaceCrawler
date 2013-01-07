@@ -4,7 +4,7 @@
 
 typedef fixed24_8 PositionFixed;
 
-namespace InputButtons {
+struct InputButtons {
 	enum Enum {
 		LEFT,
 		RIGHT,
@@ -13,8 +13,8 @@ namespace InputButtons {
 		MAX
 	};
 
-	typedef std::bitset<InputButtons::MAX> Bitset;
-}
+	typedef std::bitset<MAX> Bitset;
+};
 
 static const int WINDOW_WIDTH = 640;
 static const int WINDOW_HEIGHT = 480;
