@@ -216,6 +216,7 @@ void SpriteBuffer::draw(SpriteBufferIndices& indices) const {
 
 	glBindVertexArray(vao.name);
 	indices.update(sprite_count);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData)*vertices.size(), vertices.data(), GL_STREAM_DRAW);
 	glBindTexture(GL_TEXTURE_2D, texture.handle.name);
 	glDrawElements(GL_TRIANGLES, sprite_count * 6, GL_UNSIGNED_SHORT, nullptr);
