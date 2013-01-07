@@ -47,3 +47,10 @@ inline int randRange(RandomGenerator& r, int max) {
 inline bool randBool(RandomGenerator& r) {
 	return randRange(r, 1) == 1;
 }
+
+static const float DOUBLE_PI = 6.2831854f;
+static const float DEG_TO_RAD = 0.017453292f;
+
+inline float radiansFromDegrees(float degrees) {
+	return degrees * DEG_TO_RAD;
+}

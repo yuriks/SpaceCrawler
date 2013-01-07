@@ -15,7 +15,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer) const {
 }
 
 void Ship::update(InputButtons::Bitset& input) {
-	static const float TURNING_SPEED = 5.0f;
+	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 
 	if (input.test(InputButtons::LEFT)) {
 		angle -= TURNING_SPEED;

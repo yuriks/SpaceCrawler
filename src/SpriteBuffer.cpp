@@ -34,13 +34,9 @@ SpriteMatrix& SpriteMatrix::multiply(const SpriteMatrix& l) {
 	return *this;
 }
 
-static const float DOUBLE_PI = 6.283185482025146484375f;
-
-SpriteMatrix& SpriteMatrix::rotate(float degrees) {
-	float t = degrees / 360.0f * DOUBLE_PI;
-
-	float sin_t = std::sin(t);
-	float cos_t = std::cos(t);
+SpriteMatrix& SpriteMatrix::rotate(float radians) {
+	float sin_t = std::sin(radians);
+	float cos_t = std::cos(radians);
 
 	SpriteMatrix rotate_m = {{
 		cos_t, -sin_t,
