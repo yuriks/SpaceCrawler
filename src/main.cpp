@@ -295,6 +295,7 @@ int main() {
 		ship.pos_x = WINDOW_WIDTH / 2;
 		ship.pos_y = WINDOW_HEIGHT / 2;
 		ship.vel = mvec2(0.0f, 0.0f);
+		ship.accel = mvec2(4.0f, 0.0f);
 	}
 
 	////////////////////

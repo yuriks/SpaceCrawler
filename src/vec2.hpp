@@ -44,3 +44,15 @@ inline float dot(const vec2 a, const vec2 b) {
 inline float length_sqr(const vec2 v) {
 	return dot(v, v);
 }
+
+inline vec2 complex_mul(const vec2 a, const vec2 b) {
+	return mvec2(a.x*b.x - a.y*b.y, a.y*b.x + a.x*b.y);
+}
+
+inline vec2 complex_from_angle(float radians) {
+	return mvec2(std::cos(radians), std::sin(radians));
+}
+
+inline vec2 complex_conjugate(const vec2 c) {
+	return mvec2(c.x, -c.y);
+}
