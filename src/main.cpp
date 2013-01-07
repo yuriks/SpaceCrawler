@@ -20,17 +20,7 @@
 #include "game_types.hpp"
 #include "GameState.hpp"
 #include "DrawState.hpp"
-
-std::vector<Sprite> debug_sprites;
-
-void debugPoint(int x, int y) {
-	Sprite spr;
-	spr.color = makeColor(255, 0, 0, 255);
-	spr.setImg(16 + 2, 16 + 2, 4, 4);
-	spr.setPos(x - 2, y - 2);
-
-	debug_sprites.push_back(spr);
-}
+#include "debug_sprite.hpp"
 
 // Splits vector vel into components parallel and perpendicular to the normal
 // of the plane n.
@@ -234,11 +224,6 @@ void drawScene(const GameState& game_state, DrawState& draw_state) {
 		draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 	}
 
-	for (const Sprite& spr : debug_sprites) {
-		draw_state.sprite_buffer.append(spr);
-	}
-	debug_sprites.clear();
-
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 }
@@ -284,6 +269,8 @@ int main() {
 
 	CHECK_GL_ERROR;
 
+	initDebugSprites();
+
 	DrawState draw_state;
 	CHECK_GL_ERROR;
 	{
@@ -315,12 +302,16 @@ int main() {
 	while (running) {
 		updateScene(game_state);
 		drawScene(game_state, draw_state);
+		drawDebugSprites(draw_state.sprite_buffer_indices);
 
 		glfwSwapBuffers();
 		running = running && glfwGetWindowParam(GLFW_OPENED);
+		running = running && glfwGetKey(GLFW_KEY_ESC) == GL_FALSE;
 
 		CHECK_GL_ERROR;
 	}
+
+	deinitDebugSprites();
 
 	glfwCloseWindow();
 	glfwTerminate();
