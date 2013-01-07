@@ -31,6 +31,10 @@ void Ship::update(InputButtons::Bitset& input) {
 		vel = vel + accel;
 	}
 
+	if (input.test(InputButtons::BRAKE)) {
+		vel = vel * 0.96f;
+	}
+
 	pos_x += PositionFixed(vel.x);
 	pos_y += PositionFixed(vel.y);
 }
