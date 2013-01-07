@@ -8,7 +8,6 @@ struct Ship {
 	PositionFixed pos_x, pos_y;
 	vec2 vel;
 	float angle;
-	vec2 accel;
 
 	void draw(SpriteBuffer& sprite_buffer) const;
 	void update(InputButtons::Bitset& input);
