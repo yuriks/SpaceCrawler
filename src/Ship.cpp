@@ -27,8 +27,10 @@ void Ship::update(InputButtons::Bitset& input) {
 	}
 
 	if (input.test(InputButtons::THRUST)) {
-		vec2 accel = 4.0f * complex_from_angle(angle);
-		pos_x += PositionFixed(accel.x);
-		pos_y += PositionFixed(accel.y);
+		vec2 accel = 0.05f * complex_from_angle(angle);
+		vel = vel + accel;
 	}
+
+	pos_x += PositionFixed(vel.x);
+	pos_y += PositionFixed(vel.y);
 }
