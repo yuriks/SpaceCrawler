@@ -24,6 +24,7 @@ struct Ship {
 
 	AnimationFlags::Bitset anim_flags;
 
+	void init();
 	void draw(SpriteBuffer& sprite_buffer) const;
 	void update(InputButtons::Bitset& input);
 };

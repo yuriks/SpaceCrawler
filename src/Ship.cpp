@@ -4,6 +4,11 @@
 #include "GameState.hpp"
 #include "debug_sprite.hpp"
 
+void Ship::init() {
+	angle = 0;
+	vel = mvec2(0.0f, 0.0f);
+}
+
 void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	Sprite ship_spr;
 	ship_spr.setImg(1, 1, 32, 24);

@@ -122,10 +122,9 @@ int main() {
 
 	{
 		Ship& ship = game_state.player_ship;
-		ship.angle = 0;
+		ship.init();
 		ship.pos_x = WINDOW_WIDTH / 2;
 		ship.pos_y = WINDOW_HEIGHT / 2;
-		ship.vel = mvec2(0.0f, 0.0f);
 	}
 
 	////////////////////
