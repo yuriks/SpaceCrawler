@@ -6,7 +6,7 @@
 
 void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	Sprite ship_spr;
-	ship_spr.setImg(0, 0, 32, 24);
+	ship_spr.setImg(1, 1, 32, 24);
 	ship_spr.setPos(pos_x.integer(), pos_y.integer());
 
 	SpriteMatrix matrix;
@@ -15,12 +15,12 @@ void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	sprite_buffer.append(ship_spr, matrix);
 
 	if (anim_flags.test(AnimationFlags::THRUST_FORWARD)) {
-		ship_spr.setImg(0, 1*24, 32, 24);
+		ship_spr.setImg(1, 1+1*25, 32, 24);
 		sprite_buffer.append(ship_spr, matrix);
 	}
 
 	if (anim_flags.test(AnimationFlags::INERTIAL_BRAKE)) {
-		ship_spr.setImg(0, 2*24, 32, 24);
+		ship_spr.setImg(1, 1+2*25, 32, 24);
 		sprite_buffer.append(ship_spr, matrix);
 	}
 }
