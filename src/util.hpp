@@ -44,6 +44,10 @@ inline int randRange(RandomGenerator& r, int max) {
 	return randRange(r, 0, max);
 }
 
+inline float randRange(RandomGenerator& r, float min, float max) {
+	return std::uniform_real_distribution<float>(min, max)(r);
+}
+
 inline bool randBool(RandomGenerator& r) {
 	return randRange(r, 1) == 1;
 }
