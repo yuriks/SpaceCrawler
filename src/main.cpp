@@ -109,10 +109,7 @@ int main() {
 
 	DrawState draw_state;
 	CHECK_GL_ERROR;
-	{
-		SpriteBuffer& sprite_buffer = draw_state.sprite_buffer;
-		sprite_buffer.texture = loadTexture("player-ship.png");
-	}
+	draw_state.sprite_buffer.texture = loadTexture("player-ship.png");
 
 	CHECK_GL_ERROR;
 
