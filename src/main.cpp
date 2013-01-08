@@ -49,6 +49,9 @@ void drawScene(const GameState& game_state, DrawState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
 
+	for (const Drone& drone : game_state.drones) {
+		drone.draw(draw_state.sprite_buffer);
+	}
 	game_state.player_ship.draw(draw_state.sprite_buffer);
 
 	/* Submit sprites */
@@ -70,6 +73,9 @@ void updateScene(GameState& game_state) {
 	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
 
 	game_state.player_ship.update(input);
+	for (Drone& drone : game_state.drones) {
+		drone.update();
+	}
 }
 
 int main() {
@@ -109,7 +115,7 @@ int main() {
 
 	DrawState draw_state;
 	CHECK_GL_ERROR;
-	draw_state.sprite_buffer.texture = loadTexture("player-ship.png");
+	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 
 	CHECK_GL_ERROR;
 
@@ -118,13 +124,18 @@ int main() {
 	///////////////////////////
 	GameState game_state;
 	RandomGenerator& rng = game_state.rng;
-	rng.seed(123);
+	rng.seed(1235);
 
 	{
 		Ship& ship = game_state.player_ship;
 		ship.init();
 		ship.pos_x = WINDOW_WIDTH / 2;
 		ship.pos_y = WINDOW_HEIGHT / 2;
+	}
+	for (Drone& drone : game_state.drones) {
+		drone.init(rng);
+		drone.pos_x = randRange(rng, 64, WINDOW_WIDTH - 64 - 1);
+		drone.pos_y = randRange(rng, 64, WINDOW_HEIGHT - 64 - 1);
 	}
 
 	////////////////////
