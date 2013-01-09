@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <memory>
+#include "resources.hpp"
 
 gl::Shader loadShader(const char* shader_src, GLenum shader_type) {
 	gl::Shader shader(glCreateShader(shader_type));
@@ -46,9 +47,9 @@ std::string loadTextFile(const std::string& filename) {
 }
 
 gl::ShaderProgram loadShaderProgram() {
-	std::string vertex_shader_src = loadTextFile("vertex_shader.glsl");
+	std::string vertex_shader_src = loadTextFile(data_path + "vertex_shader.glsl");
 	assert(!vertex_shader_src.empty());
-	std::string fragment_shader_src = loadTextFile("fragment_shader.glsl");
+	std::string fragment_shader_src = loadTextFile(data_path + "fragment_shader.glsl");
 	assert(!fragment_shader_src.empty());
 
 	gl::Shader vertex_shader(loadShader(vertex_shader_src.c_str(), GL_VERTEX_SHADER));
