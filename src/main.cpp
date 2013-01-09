@@ -164,8 +164,18 @@ int main() {
 	// Main game loop //
 	////////////////////
 	bool running = true;
+	double update_time = 0.0;
+	static const double TIMESTEP = 1.0 / 60.0;
+	double last_time = glfwGetTime();
 	while (running) {
-		updateScene(game_state);
+		double cur_time = glfwGetTime();
+		update_time += cur_time - last_time;
+		last_time = cur_time;
+
+		while (update_time > 0.0) {
+			updateScene(game_state);
+			update_time -= TIMESTEP;
+		}
 		drawScene(game_state, draw_state);
 		drawDebugSprites(draw_state.sprite_buffer_indices);
 
