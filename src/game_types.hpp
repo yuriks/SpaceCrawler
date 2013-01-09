@@ -10,6 +10,7 @@ struct InputButtons {
 		RIGHT,
 		THRUST,
 		BRAKE,
+		SHOOT,
 		MAX
 	};
 

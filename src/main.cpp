@@ -48,9 +48,13 @@ void drawText(int x, int y, const std::string& text, SpriteBuffer& buffer, const
 void drawScene(const GameState& game_state, DrawState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
+	draw_state.bullet_buffer.clear();
 
 	for (const Drone& drone : game_state.drones) {
 		drone.draw(draw_state.sprite_buffer);
+	}
+	for (const Bullet& bullet : game_state.bullets) {
+		bullet.draw(draw_state.bullet_buffer);
 	}
 	game_state.player_ship.draw(draw_state.sprite_buffer);
 
@@ -63,6 +67,7 @@ void drawScene(const GameState& game_state, DrawState& draw_state) {
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
+	draw_state.bullet_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
 void updateScene(GameState& game_state) {
@@ -71,8 +76,12 @@ void updateScene(GameState& game_state) {
 	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
 	input.set(InputButtons::THRUST, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
 	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
+	input.set(InputButtons::SHOOT, glfwGetKey('X') == GL_TRUE);
 
-	game_state.player_ship.update(input);
+	game_state.player_ship.update(input, game_state);
+	for (Bullet& bullet : game_state.bullets) {
+		bullet.update();
+	}
 	for (Drone& drone : game_state.drones) {
 		drone.update();
 	}
@@ -116,6 +125,7 @@ int main() {
 	DrawState draw_state;
 	CHECK_GL_ERROR;
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
+	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
 
 	CHECK_GL_ERROR;
 

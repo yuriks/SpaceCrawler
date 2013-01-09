@@ -4,6 +4,7 @@
 #include <bitset>
 
 struct SpriteBuffer;
+struct GameState;
 
 struct Ship {
 	struct AnimationFlags {
@@ -22,9 +23,11 @@ struct Ship {
 	vec2 vel;
 	float angle;
 
+	int shoot_cooldown;
+
 	AnimationFlags::Bitset anim_flags;
 
 	void init();
 	void draw(SpriteBuffer& sprite_buffer) const;
-	void update(InputButtons::Bitset& input);
+	void update(InputButtons::Bitset& input, GameState& game_state);
 };

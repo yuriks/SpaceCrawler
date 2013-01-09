@@ -2,11 +2,12 @@
 
 #include "SpriteBuffer.hpp"
 #include "GameState.hpp"
-#include "debug_sprite.hpp"
+#include "Bullet.hpp"
 
 void Ship::init() {
 	angle = 0;
 	vel = mvec2(0.0f, 0.0f);
+	shoot_cooldown = 0;
 }
 
 void Ship::draw(SpriteBuffer& sprite_buffer) const {
@@ -30,7 +31,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	}
 }
 
-void Ship::update(InputButtons::Bitset& input) {
+void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 
 	anim_flags.reset();
@@ -52,6 +53,20 @@ void Ship::update(InputButtons::Bitset& input) {
 	} else if (input.test(InputButtons::BRAKE)) {
 		vel = vel * 0.96f;
 		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
+	}
+
+	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {
+		Bullet bullet;
+		bullet.pos_x = pos_x;
+		bullet.pos_y = pos_y;
+		bullet.angle = angle;
+		bullet.vel = vel + complex_from_angle(angle) * 4.0f;
+
+		game_state.bullets.push_back(bullet);
+		shoot_cooldown = 5;
+	}
+	if (shoot_cooldown > 0) {
+		--shoot_cooldown;
 	}
 
 	pos_x += PositionFixed(vel.x);
