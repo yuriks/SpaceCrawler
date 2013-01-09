@@ -79,6 +79,7 @@
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\debug_sprite.cpp" />
     <ClCompile Include="src\Drone.cpp" />
+    <ClCompile Include="src\geometry.cpp" />
     <ClCompile Include="src\GL3\gl3w.c" />
     <ClCompile Include="src\graphics_init.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="src\Fixed.hpp" />
     <ClInclude Include="src\GameState.hpp" />
     <ClInclude Include="src\game_types.hpp" />
+    <ClInclude Include="src\geometry.hpp" />
     <ClInclude Include="src\GL3\gl3.h" />
     <ClInclude Include="src\GL3\gl3w.h" />
     <ClInclude Include="src\gl\Buffer.hpp" />

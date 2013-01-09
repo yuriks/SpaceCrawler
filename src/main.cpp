@@ -21,6 +21,7 @@
 #include "GameState.hpp"
 #include "DrawState.hpp"
 #include "debug_sprite.hpp"
+#include "geometry.hpp"
 
 struct FontInfo {
 	char first_char;
@@ -84,6 +85,19 @@ void updateScene(GameState& game_state) {
 	}
 	for (Drone& drone : game_state.drones) {
 		drone.update();
+	}
+
+	// Test bullet-drone collision
+	for (Drone& drone : game_state.drones) {
+		std::vector<Bullet>& bullets = game_state.bullets;
+		for (auto i = bullets.begin(); i < bullets.end();) {
+			vec2 rel_pos = drone.pos - i->pos;
+			if (collideCircleRectangle(rel_pos, 8.0f, mvec2(13.0f / 2, 3.0f / 2), i->angle)) {
+				i = bullets.erase(i);
+			} else {
+				++i;
+			}
+		}
 	}
 }
 
