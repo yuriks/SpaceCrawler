@@ -4,10 +4,12 @@
 #include "GameState.hpp"
 #include "debug_sprite.hpp"
 
+static const int STROBE_INTERVAL = 60*3;
+
 void Drone::init(RandomGenerator& rng) {
 	angle = randRange(rng, 0.0f, DOUBLE_PI);
 	angle_rate = randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f);
-	anim_counter = randRange(rng, 0, 60*3-1);
+	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
 }
 
 void Drone::draw(SpriteBuffer& sprite_buffer) const {
@@ -41,7 +43,7 @@ void Drone::update() {
 		anim_flags.set(AnimationFlags::RED_STROBE);
 	}
 
-	if (++anim_counter == 60*3) {
+	if (++anim_counter == STROBE_INTERVAL) {
 		anim_counter = 0;
 	}
 
