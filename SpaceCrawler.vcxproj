@@ -109,6 +109,7 @@
     <ClInclude Include="src\graphics_init.hpp" />
     <ClInclude Include="src\Position.hpp" />
     <ClInclude Include="src\resources.hpp" />
+    <ClInclude Include="src\Rigidbody.hpp" />
     <ClInclude Include="src\Ship.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
     <ClInclude Include="src\stb_image.h" />

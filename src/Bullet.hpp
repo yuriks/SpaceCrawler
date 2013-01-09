@@ -1,14 +1,12 @@
 #pragma once
-#include "Position.hpp"
-#include "vec2.hpp"
+#include "Rigidbody.hpp"
 
 struct SpriteBuffer;
 struct Camera;
 
 struct Bullet {
-	Position pos;
+	Rigidbody rb;
 	float angle;
-	vec2 vel;
 
 	void draw(SpriteBuffer& sprite_buffer, const Camera& camera) const;
 	void update();

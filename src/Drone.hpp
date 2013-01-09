@@ -1,6 +1,5 @@
 #pragma once
-#include "Position.hpp"
-#include "vec2.hpp"
+#include "Rigidbody.hpp"
 #include "util.hpp"
 #include <bitset>
 
@@ -18,7 +17,7 @@ struct Drone {
 		typedef std::bitset<MAX> Bitset;
 	};
 
-	Position pos;
+	Rigidbody rb;
 	float angle;
 	float angle_rate;
 

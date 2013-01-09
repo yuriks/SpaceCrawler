@@ -6,7 +6,7 @@
 void Bullet::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite bullet_spr;
 	bullet_spr.setImg(1, 10, 13, 3);
-	bullet_spr.setPos(camera.transform(pos));
+	bullet_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix bullet_matrix;
 	bullet_matrix.loadIdentity().rotate(angle);
@@ -15,5 +15,5 @@ void Bullet::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 }
 
 void Bullet::update() {
-	pos += vel;
+	rb.update();
 }
