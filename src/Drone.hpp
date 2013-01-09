@@ -5,6 +5,7 @@
 #include <bitset>
 
 struct SpriteBuffer;
+struct Camera;
 
 struct Drone {
 	struct AnimationFlags {
@@ -25,6 +26,6 @@ struct Drone {
 	AnimationFlags::Bitset anim_flags;
 
 	void init(RandomGenerator& rng);
-	void draw(SpriteBuffer& sprite_buffer) const;
+	void draw(SpriteBuffer& sprite_buffer, const Camera& camera) const;
 	void update();
 };

@@ -52,12 +52,12 @@ void drawScene(const GameState& game_state, DrawState& draw_state) {
 	draw_state.bullet_buffer.clear();
 
 	for (const Drone& drone : game_state.drones) {
-		drone.draw(draw_state.sprite_buffer);
+		drone.draw(draw_state.sprite_buffer, game_state.camera);
 	}
 	for (const Bullet& bullet : game_state.bullets) {
-		bullet.draw(draw_state.bullet_buffer);
+		bullet.draw(draw_state.bullet_buffer, game_state.camera);
 	}
-	game_state.player_ship.draw(draw_state.sprite_buffer);
+	game_state.player_ship.draw(draw_state.sprite_buffer, game_state.camera);
 
 	/* Submit sprites */
 	// More superfluous drawcalls to change the GPU into high-performance mode? Sure, why not.
@@ -99,6 +99,8 @@ void updateScene(GameState& game_state) {
 			}
 		}
 	}
+
+	game_state.camera.pos = game_state.player_ship.pos;
 }
 
 int main() {

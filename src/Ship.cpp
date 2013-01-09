@@ -3,6 +3,7 @@
 #include "SpriteBuffer.hpp"
 #include "GameState.hpp"
 #include "Bullet.hpp"
+#include "Camera.hpp"
 
 void Ship::init() {
 	angle = 0;
@@ -10,10 +11,10 @@ void Ship::init() {
 	shoot_cooldown = 0;
 }
 
-void Ship::draw(SpriteBuffer& sprite_buffer) const {
+void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite ship_spr;
 	ship_spr.setImg(1, 1, 32, 24);
-	ship_spr.setPos(pos.x.integer(), pos.y.integer());
+	ship_spr.setPos(camera.transform(pos));
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);

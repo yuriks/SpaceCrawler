@@ -6,6 +6,7 @@
 
 struct SpriteBuffer;
 struct GameState;
+struct Camera;
 
 struct Ship {
 	struct AnimationFlags {
@@ -29,6 +30,6 @@ struct Ship {
 	AnimationFlags::Bitset anim_flags;
 
 	void init();
-	void draw(SpriteBuffer& sprite_buffer) const;
+	void draw(SpriteBuffer& sprite_buffer, const Camera& camera) const;
 	void update(InputButtons::Bitset& input, GameState& game_state);
 };

@@ -7,6 +7,7 @@
 #include "texture.hpp"
 #include "gl/Buffer.hpp"
 #include "gl/VertexArray.hpp"
+#include "vec2.hpp"
 
 struct VertexData {
 	GLfloat pos_x, pos_y;
@@ -40,6 +41,11 @@ struct Sprite {
 
 	void setPos(int x_, int y_) {
 		x = x_; y = y_;
+	}
+
+	void setPos(const vec2 v) {
+		x = static_cast<int>(v.x);
+		y = static_cast<int>(v.y);
 	}
 };
 

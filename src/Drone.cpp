@@ -3,6 +3,7 @@
 #include "SpriteBuffer.hpp"
 #include "GameState.hpp"
 #include "debug_sprite.hpp"
+#include "Camera.hpp"
 
 static const int STROBE_INTERVAL = 60*3;
 
@@ -12,10 +13,10 @@ void Drone::init(RandomGenerator& rng) {
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
 }
 
-void Drone::draw(SpriteBuffer& sprite_buffer) const {
+void Drone::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite drone_spr;
 	drone_spr.setImg(34, 1, 24, 24);
-	drone_spr.setPos(pos.x.integer(), pos.y.integer());
+	drone_spr.setPos(camera.transform(pos));
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);
