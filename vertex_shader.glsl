@@ -1,8 +1,8 @@
-#version 330
+#version 130
 
-layout(location = 0) in vec2 in_position;
-layout(location = 1) in vec2 in_tex_coord;
-layout(location = 2) in vec4 in_color;
+in vec2 in_position;
+in vec2 in_tex_coord;
+in vec4 in_color;
 
 out vec2 vf_tex_coord;
 flat out vec4 vf_color;

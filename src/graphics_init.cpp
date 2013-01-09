@@ -59,6 +59,10 @@ gl::ShaderProgram loadShaderProgram() {
 	gl::ShaderProgram program(glCreateProgram());
 	glAttachShader(program.name, vertex_shader.name);
 	glAttachShader(program.name, fragment_shader.name);
+	glBindAttribLocation(program.name, 0, "in_position");
+	glBindAttribLocation(program.name, 1, "in_tex_coord");
+	glBindAttribLocation(program.name, 2, "in_color");
+	glBindFragDataLocation(program.name, 0, "out_color");
 	glLinkProgram(program.name);
 
 	GLint link_result;
@@ -95,9 +99,9 @@ bool initWindow(int width, int height) {
 	}
 
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
-	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 0);
+	//glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
 	if (!glfwOpenWindow(width, height, 8, 8, 8, 0, 0, 8, GLFW_WINDOW)) {
 		std::cerr << "Couldn't open window.\n";
@@ -109,8 +113,8 @@ bool initWindow(int width, int height) {
 		return false;
 	}
 
-	if (!gl3wIsSupported(3, 3)) {
-		std::cerr << "OpenGL 3.3 not supported.\n";
+	if (!gl3wIsSupported(3, 0)) {
+		std::cerr << "OpenGL 3.0 not supported.\n";
 		return false;
 	}
 
