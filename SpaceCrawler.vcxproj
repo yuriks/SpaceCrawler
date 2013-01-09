@@ -104,6 +104,7 @@
     <ClInclude Include="src\gl\Texture.hpp" />
     <ClInclude Include="src\gl\VertexArray.hpp" />
     <ClInclude Include="src\graphics_init.hpp" />
+    <ClInclude Include="src\Position.hpp" />
     <ClInclude Include="src\resources.hpp" />
     <ClInclude Include="src\Ship.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />

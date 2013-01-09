@@ -139,13 +139,11 @@ int main() {
 	{
 		Ship& ship = game_state.player_ship;
 		ship.init();
-		ship.pos_x = WINDOW_WIDTH / 2;
-		ship.pos_y = WINDOW_HEIGHT / 2;
+		ship.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
 	for (Drone& drone : game_state.drones) {
 		drone.init(rng);
-		drone.pos_x = randRange(rng, 64, WINDOW_WIDTH - 64 - 1);
-		drone.pos_y = randRange(rng, 64, WINDOW_HEIGHT - 64 - 1);
+		drone.pos = mPosition(randRange(rng, 64, WINDOW_WIDTH - 64 - 1), randRange(rng, 64, WINDOW_HEIGHT - 64 - 1));
 	}
 
 	////////////////////

@@ -1,5 +1,5 @@
 #pragma once
-#include "game_types.hpp"
+#include "Position.hpp"
 #include "vec2.hpp"
 #include "util.hpp"
 #include <bitset>
@@ -17,7 +17,7 @@ struct Drone {
 		typedef std::bitset<MAX> Bitset;
 	};
 
-	PositionFixed pos_x, pos_y;
+	Position pos;
 	float angle;
 	float angle_rate;
 

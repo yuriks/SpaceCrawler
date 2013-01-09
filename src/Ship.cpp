@@ -13,7 +13,7 @@ void Ship::init() {
 void Ship::draw(SpriteBuffer& sprite_buffer) const {
 	Sprite ship_spr;
 	ship_spr.setImg(1, 1, 32, 24);
-	ship_spr.setPos(pos_x.integer(), pos_y.integer());
+	ship_spr.setPos(pos.x.integer(), pos.y.integer());
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);
@@ -57,8 +57,7 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 
 	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {
 		Bullet bullet;
-		bullet.pos_x = pos_x;
-		bullet.pos_y = pos_y;
+		bullet.pos = pos;
 		bullet.angle = angle;
 		bullet.vel = vel + complex_from_angle(angle) * 4.0f;
 
@@ -69,6 +68,5 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 		--shoot_cooldown;
 	}
 
-	pos_x += PositionFixed(vel.x);
-	pos_y += PositionFixed(vel.y);
+	pos += vel;
 }

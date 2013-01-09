@@ -1,6 +1,7 @@
 #pragma once
 #include "game_types.hpp"
 #include "vec2.hpp"
+#include "Position.hpp"
 #include <bitset>
 
 struct SpriteBuffer;
@@ -19,7 +20,7 @@ struct Ship {
 		typedef std::bitset<MAX> Bitset;
 	};
 
-	PositionFixed pos_x, pos_y;
+	Position pos;
 	vec2 vel;
 	float angle;
 

@@ -15,7 +15,7 @@ void Drone::init(RandomGenerator& rng) {
 void Drone::draw(SpriteBuffer& sprite_buffer) const {
 	Sprite drone_spr;
 	drone_spr.setImg(34, 1, 24, 24);
-	drone_spr.setPos(pos_x.integer(), pos_y.integer());
+	drone_spr.setPos(pos.x.integer(), pos.y.integer());
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);

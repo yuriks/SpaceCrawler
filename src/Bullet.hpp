@@ -1,11 +1,11 @@
 #pragma once
-#include "game_types.hpp"
+#include "Position.hpp"
 #include "vec2.hpp"
 
 struct SpriteBuffer;
 
 struct Bullet {
-	PositionFixed pos_x, pos_y;
+	Position pos;
 	float angle;
 	vec2 vel;
 

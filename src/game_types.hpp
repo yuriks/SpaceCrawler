@@ -2,8 +2,6 @@
 #include "Fixed.hpp"
 #include <bitset>
 
-typedef fixed24_8 PositionFixed;
-
 struct InputButtons {
 	enum Enum {
 		LEFT,
