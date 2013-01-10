@@ -1,7 +1,7 @@
 #include "texture.hpp"
 
 #include "stb_image.h"
-#include "GL3/gl3w.h"
+#include "gl/gl_1_5.h"
 #include "resources.hpp"
 #include <memory>
 #include <cassert>

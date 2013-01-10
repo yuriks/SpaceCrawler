@@ -80,7 +80,7 @@
     <ClCompile Include="src\debug_sprite.cpp" />
     <ClCompile Include="src\Drone.cpp" />
     <ClCompile Include="src\geometry.cpp" />
-    <ClCompile Include="src\GL3\gl3w.c" />
+    <ClCompile Include="src\gl\gl_1_5.c" />
     <ClCompile Include="src\graphics_init.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\resources.cpp" />
@@ -99,13 +99,9 @@
     <ClInclude Include="src\GameState.hpp" />
     <ClInclude Include="src\game_types.hpp" />
     <ClInclude Include="src\geometry.hpp" />
-    <ClInclude Include="src\GL3\gl3.h" />
-    <ClInclude Include="src\GL3\gl3w.h" />
     <ClInclude Include="src\gl\Buffer.hpp" />
-    <ClInclude Include="src\gl\Shader.hpp" />
-    <ClInclude Include="src\gl\ShaderProgram.hpp" />
+    <ClInclude Include="src\gl\gl_1_5.h" />
     <ClInclude Include="src\gl\Texture.hpp" />
-    <ClInclude Include="src\gl\VertexArray.hpp" />
     <ClInclude Include="src\graphics_init.hpp" />
     <ClInclude Include="src\Position.hpp" />
     <ClInclude Include="src\resources.hpp" />

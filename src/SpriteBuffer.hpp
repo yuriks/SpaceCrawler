@@ -1,12 +1,11 @@
 #pragma once
-#include "GL3/gl3.h"
+#include "gl/gl_1_5.h"
 #include <vector>
 #include <cstdint>
 #include <array>
 #include "graphics_init.hpp"
 #include "texture.hpp"
 #include "gl/Buffer.hpp"
-#include "gl/VertexArray.hpp"
 #include "vec2.hpp"
 
 struct VertexData {
@@ -76,7 +75,6 @@ struct SpriteBuffer {
 
 	unsigned int sprite_count;
 	gl::Buffer vbo;
-	gl::VertexArray vao;
 	TextureInfo texture;
 
 	SpriteBuffer();

@@ -1,6 +1,5 @@
-#define GLFW_INCLUDE_GL3 1
+#include "gl/gl_1_5.h"
 #include <GL/glfw.h>
-#include "GL3/gl3w.h"
 
 #include "stb_image.h"
 #include <iostream>
@@ -114,23 +113,19 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	gl::ShaderProgram shader_program = loadShaderProgram();
-	glUseProgram(shader_program.name);
-
-	GLuint u_view_matrix_location = glGetUniformLocation(shader_program.name, "u_view_matrix");
-	GLfloat view_matrix[9] = {
-		2.0f/WINDOW_WIDTH,  0.0f,              -1.0f,
-		0.0f,              -2.0/WINDOW_HEIGHT,  1.0f,
-		0.0f,               0.0f,               1.0f
+	glMatrixMode(GL_MODELVIEW);
+	GLfloat view_matrix[16] = {
+		2.0f/WINDOW_WIDTH,  0.0f,               0.0f, -1.0f,
+		0.0f,              -2.0/WINDOW_HEIGHT,  0.0f, 1.0f,
+		0.0f,               0.0f,               1.0f, 0.0f,
+		0.0f,               0.0f,               0.0f, 1.0f
 	};
-	glUniformMatrix3fv(u_view_matrix_location, 1, GL_TRUE, view_matrix);
-
-	GLuint u_texture_location = glGetUniformLocation(shader_program.name, "u_texture");
-	glUniform1i(u_texture_location, 0);
+	glLoadTransposeMatrixf(view_matrix);
 
 	CHECK_GL_ERROR;
 
 	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_TEXTURE_2D);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

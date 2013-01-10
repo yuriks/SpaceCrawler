@@ -1,15 +1,16 @@
 #include "SpriteBuffer.hpp"
 
-#include "GL3/gl3w.h"
+#include "gl/gl_1_5.h"
 
 void VertexData::setupVertexAttribs() {
 	CHECK_GL_ERROR_PARANOID;
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, pos_x)));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, tex_s)));
-	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, color)));
-	for (int i = 0; i < 3; ++i)
-		glEnableVertexAttribArray(i);
+	glVertexPointer(2, GL_FLOAT, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, pos_x)));
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, tex_s)));
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexData), reinterpret_cast<void*>(offsetof(VertexData, color)));
+	glEnableClientState(GL_COLOR_ARRAY);
 
 	CHECK_GL_ERROR_PARANOID;
 }
@@ -120,13 +121,7 @@ SpriteBuffer::SpriteBuffer() :
 {
 	CHECK_GL_ERROR_PARANOID;
 
-	glGenVertexArrays(1, &vao.name);
-	glBindVertexArray(vao.name);
-
 	glGenBuffers(1, &vbo.name);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
-
-	VertexData::setupVertexAttribs();
 
 	CHECK_GL_ERROR_PARANOID;
 }
@@ -210,10 +205,10 @@ void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
 void SpriteBuffer::draw(SpriteBufferIndices& indices) const {
 	CHECK_GL_ERROR_PARANOID;
 
-	glBindVertexArray(vao.name);
 	indices.update(sprite_count);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData)*vertices.size(), vertices.data(), GL_STREAM_DRAW);
+	VertexData::setupVertexAttribs();
 	glBindTexture(GL_TEXTURE_2D, texture.handle.name);
 	glDrawElements(GL_TRIANGLES, sprite_count * 6, GL_UNSIGNED_SHORT, nullptr);
 

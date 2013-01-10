@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include "GL3/gl3w.h"
+#include "gl/gl_1_5.h"
 #include "util.hpp"
 
 namespace gl {
