@@ -19,7 +19,7 @@
 #include "texture.hpp"
 #include "game_types.hpp"
 #include "GameState.hpp"
-#include "DrawState.hpp"
+#include "RenderState.hpp"
 #include "debug_sprite.hpp"
 #include "geometry.hpp"
 
@@ -46,7 +46,7 @@ void drawText(int x, int y, const std::string& text, SpriteBuffer& buffer, const
 	}
 }
 
-void drawScene(const GameState& game_state, DrawState& draw_state) {
+void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
 	draw_state.bullet_buffer.clear();
@@ -138,7 +138,7 @@ int main() {
 
 	initDebugSprites();
 
-	DrawState draw_state;
+	RenderState draw_state;
 	CHECK_GL_ERROR;
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");

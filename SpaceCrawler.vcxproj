@@ -93,7 +93,7 @@
     <ClInclude Include="src\Bullet.hpp" />
     <ClInclude Include="src\Camera.hpp" />
     <ClInclude Include="src\debug_sprite.hpp" />
-    <ClInclude Include="src\DrawState.hpp" />
+    <ClInclude Include="src\RenderState.hpp" />
     <ClInclude Include="src\Drone.hpp" />
     <ClInclude Include="src\Fixed.hpp" />
     <ClInclude Include="src\GameState.hpp" />
