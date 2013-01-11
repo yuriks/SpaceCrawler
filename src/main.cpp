@@ -59,12 +59,6 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	game_state.player_ship.draw(draw_state.sprite_buffer, game_state.camera);
 
 	/* Submit sprites */
-	// More superfluous drawcalls to change the GPU into high-performance mode? Sure, why not.
-	glClear(GL_COLOR_BUFFER_BIT);
-	for (int i = 0; i < 1000; ++i) {
-		draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
-	}
-
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.bullet_buffer.draw(draw_state.sprite_buffer_indices);
