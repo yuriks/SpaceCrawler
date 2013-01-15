@@ -87,6 +87,7 @@
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\SpriteBuffer.cpp" />
     <ClCompile Include="src\stb_image.c" />
+    <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +110,7 @@
     <ClInclude Include="src\Ship.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
     <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\text.hpp" />
     <ClInclude Include="src\texture.hpp" />
     <ClInclude Include="src\util.hpp" />
     <ClInclude Include="src\vec2.hpp" />

@@ -22,29 +22,6 @@
 #include "debug_sprite.hpp"
 #include "geometry.hpp"
 
-struct FontInfo {
-	char first_char;
-	int img_x, img_y;
-	int img_w, img_h;
-
-	FontInfo(char first_char, int img_x, int img_y, int img_w, int img_h)
-		: first_char(first_char), img_x(img_x), img_y(img_y), img_w(img_w), img_h(img_h)
-	{ }
-};
-
-void drawText(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font)
-{
-	Sprite spr;
-	spr.setPos(x, y);
-	spr.setImg(font.img_x, font.img_y, font.img_w, font.img_h);
-
-	for (char c : text) {
-		spr.img_x = font.img_x + (c - font.first_char) * font.img_w;
-		buffer.append(spr);
-		spr.x += font.img_w;
-	}
-}
-
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
