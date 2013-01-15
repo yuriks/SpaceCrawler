@@ -14,6 +14,8 @@ struct GameState {
 	InputButtons::Bitset input;
 	Camera camera;
 
+	double frametime_min, frametime_avg, frametime_max, fps;
+
 	Ship player_ship;
 	std::array<Drone, 8> drones;
 	std::vector<Bullet> bullets;

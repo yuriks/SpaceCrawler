@@ -10,6 +10,10 @@
 #include <array>
 #include <algorithm>
 #include <string>
+#include <sstream>
+#include <ios>
+#include <iomanip>
+#include <numeric>
 #include "util.hpp"
 #include "Fixed.hpp"
 #include "SpriteBuffer.hpp"
@@ -21,11 +25,19 @@
 #include "RenderState.hpp"
 #include "debug_sprite.hpp"
 #include "geometry.hpp"
+#include "text.hpp"
+
+std::string formatFrametimeFloat(double x) {
+	std::ostringstream ss;
+	ss << std::fixed << std::setprecision(3) << x;
+	return ss.str();
+}
 
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.sprite_buffer.clear();
 	draw_state.bullet_buffer.clear();
+	draw_state.ui_buffer.clear();
 
 	for (const Drone& drone : game_state.drones) {
 		drone.draw(draw_state.sprite_buffer, game_state.camera);
@@ -35,10 +47,26 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 	game_state.player_ship.draw(draw_state.sprite_buffer, game_state.camera);
 
+	/* Draw FPS */
+	{
+		const std::string fps_text = "FPS: " + formatFrametimeFloat(game_state.fps);
+		const std::string min_text = "MIN: " + formatFrametimeFloat(game_state.frametime_min * 1000.0f);
+		const std::string avg_text = "AVG: " + formatFrametimeFloat(game_state.frametime_avg * 1000.0f);
+		const std::string max_text = "MAX: " + formatFrametimeFloat(game_state.frametime_max * 1000.0f);
+
+		const FontInfo ui_font(' ', 8, 8, 0, 0, 16, 6);
+
+		drawString(WINDOW_WIDTH, 0*8, fps_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
+		drawString(WINDOW_WIDTH, 1*8, min_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
+		drawString(WINDOW_WIDTH, 2*8, avg_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
+		drawString(WINDOW_WIDTH, 3*8, max_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
+	}
+
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.bullet_buffer.draw(draw_state.sprite_buffer_indices);
+	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
 void updateScene(GameState& game_state) {
@@ -108,6 +136,7 @@ int main() {
 	CHECK_GL_ERROR;
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
+	draw_state.ui_buffer.texture = loadTexture("font-8x8.png");
 
 	CHECK_GL_ERROR;
 
@@ -131,19 +160,34 @@ int main() {
 	////////////////////
 	// Main game loop //
 	////////////////////
+	std::array<double, 60> frametimes;
+	unsigned int frametimes_pos = 0;
+	frametimes.fill(1.0 / 60.0);
+
 	bool running = true;
 	double update_time = 0.0;
 	static const double TIMESTEP = 1.0 / 60.0;
 	double last_time = glfwGetTime();
 	while (running) {
 		double cur_time = glfwGetTime();
-		update_time += cur_time - last_time;
+		const double frame_time = cur_time - last_time;
+		update_time += frame_time;
 		last_time = cur_time;
+
+		frametimes[frametimes_pos] = frame_time;
+		if (++frametimes_pos >= frametimes.size()) frametimes_pos = 0;
 
 		while (update_time > 0.0) {
 			updateScene(game_state);
 			update_time -= TIMESTEP;
 		}
+
+		auto frametimes_minmax = std::minmax_element(frametimes.cbegin(), frametimes.cend());
+		game_state.frametime_min = *frametimes_minmax.first;
+		game_state.frametime_max = *frametimes_minmax.second;
+		game_state.frametime_avg = std::accumulate(frametimes.cbegin(), frametimes.cend(), 0.0) / frametimes.size();
+		game_state.fps = 1.f / game_state.frametime_avg;
+
 		drawScene(game_state, draw_state);
 		drawDebugSprites(draw_state.sprite_buffer_indices);
 
