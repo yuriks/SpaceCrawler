@@ -58,3 +58,8 @@ static const float DEG_TO_RAD = 0.017453292f;
 inline float radiansFromDegrees(float degrees) {
 	return degrees * DEG_TO_RAD;
 }
+
+template <typename T>
+T intDivRoundUp(T dividend, T divisor) {
+	return (dividend + divisor - 1) / divisor;
+}
