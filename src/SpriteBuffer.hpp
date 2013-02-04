@@ -22,10 +22,14 @@ inline Color makeColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	return c;
 }
 
+struct IntRect {
+	int x, y;
+	int h, w;
+};
+
 struct Sprite {
 	int x, y;
-	int img_x, img_y;
-	int img_h, img_w;
+	IntRect img;
 	Color color;
 
 	Sprite() {
@@ -34,8 +38,8 @@ struct Sprite {
 	}
 
 	void setImg(int x, int y, int w, int h) {
-		img_x = x; img_y = y;
-		img_w = w; img_h = h;
+		img.x = x; img.y = y;
+		img.w = w; img.h = h;
 	}
 
 	void setPos(int x_, int y_) {

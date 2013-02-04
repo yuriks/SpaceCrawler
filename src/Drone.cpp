@@ -24,12 +24,12 @@ void Drone::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	sprite_buffer.append(drone_spr, matrix);
 
 	if (anim_flags.test(AnimationFlags::YELLOW_STROBE)) {
-		drone_spr.img_y = 1+1*25;
+		drone_spr.img.y = 1+1*25;
 		sprite_buffer.append(drone_spr, matrix);
 	}
 
 	if (anim_flags.test(AnimationFlags::RED_STROBE)) {
-		drone_spr.img_y = 1+2*25;
+		drone_spr.img.y = 1+2*25;
 		sprite_buffer.append(drone_spr, matrix);
 	}
 }

@@ -132,10 +132,10 @@ void SpriteBuffer::clear() {
 }
 
 void SpriteBuffer::append(const Sprite& spr) {
-	float img_x = spr.img_x / static_cast<float>(texture.width);
-	float img_w = spr.img_w / static_cast<float>(texture.width);
-	float img_y = spr.img_y / static_cast<float>(texture.height);
-	float img_h = spr.img_h / static_cast<float>(texture.height);
+	float img_x = spr.img.x / static_cast<float>(texture.width);
+	float img_w = spr.img.w / static_cast<float>(texture.width);
+	float img_y = spr.img.y / static_cast<float>(texture.height);
+	float img_h = spr.img.h / static_cast<float>(texture.height);
 
 	VertexData v;
 	v.color = spr.color;
@@ -146,11 +146,11 @@ void SpriteBuffer::append(const Sprite& spr) {
 	v.tex_t = img_y;
 	vertices.push_back(v);
 
-	v.pos_x = static_cast<float>(spr.x + spr.img_w);
+	v.pos_x = static_cast<float>(spr.x + spr.img.w);
 	v.tex_s = img_x + img_w;
 	vertices.push_back(v);
 
-	v.pos_y = static_cast<float>(spr.y + spr.img_h);
+	v.pos_y = static_cast<float>(spr.y + spr.img.h);
 	v.tex_t = img_y + img_h;
 	vertices.push_back(v);
 
@@ -162,16 +162,16 @@ void SpriteBuffer::append(const Sprite& spr) {
 }
 
 void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
-	float img_x = spr.img_x / static_cast<float>(texture.width);
-	float img_w = spr.img_w / static_cast<float>(texture.width);
-	float img_y = spr.img_y / static_cast<float>(texture.height);
-	float img_h = spr.img_h / static_cast<float>(texture.height);
+	float img_x = spr.img.x / static_cast<float>(texture.width);
+	float img_w = spr.img.w / static_cast<float>(texture.width);
+	float img_y = spr.img.y / static_cast<float>(texture.height);
+	float img_h = spr.img.h / static_cast<float>(texture.height);
 
 	VertexData v;
 	v.color = spr.color;
 
-	float x = spr.img_w / 2.0f;
-	float y = spr.img_h / 2.0f;
+	float x = spr.img.w / 2.0f;
+	float y = spr.img.h / 2.0f;
 
 	float m0x = matrix.m[0] * x;
 	float m1y = matrix.m[1] * y;
