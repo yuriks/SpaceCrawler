@@ -19,6 +19,7 @@ bool initWindow(int width, int height) {
 	//glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+	glfwOpenWindowHint(GLFW_REFRESH_RATE, 60);
 	if (!glfwOpenWindow(width, height, 8, 8, 8, 0, 0, 8, GLFW_WINDOW)) {
 		std::cerr << "Couldn't open window.\n";
 		return false;
