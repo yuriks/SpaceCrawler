@@ -26,6 +26,7 @@
 #include "debug_sprite.hpp"
 #include "geometry.hpp"
 #include "text.hpp"
+#include "starfield.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -35,9 +36,14 @@ std::string formatFrametimeFloat(double x) {
 
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
+	draw_state.background_buffer.clear();
 	draw_state.sprite_buffer.clear();
 	draw_state.bullet_buffer.clear();
 	draw_state.ui_buffer.clear();
+
+	static const float starfield_parallax = 16.0f;
+	vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) / starfield_parallax;
+	drawStarfield(draw_state, 0, starfield_pos);
 
 	for (const Drone& drone : game_state.drones) {
 		drone.draw(draw_state.sprite_buffer, game_state.camera);
@@ -64,6 +70,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
+	draw_state.background_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.bullet_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
@@ -134,6 +141,7 @@ int main() {
 
 	RenderState draw_state;
 	CHECK_GL_ERROR;
+	draw_state.background_buffer.texture = loadTexture("background.png");
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
 	draw_state.ui_buffer.texture = loadTexture("font-8x8.png");

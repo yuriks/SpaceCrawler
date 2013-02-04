@@ -86,6 +86,7 @@
     <ClCompile Include="src\resources.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\SpriteBuffer.cpp" />
+    <ClCompile Include="src\starfield.cpp" />
     <ClCompile Include="src\stb_image.c" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="src\Rigidbody.hpp" />
     <ClInclude Include="src\Ship.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
+    <ClInclude Include="src\starfield.hpp" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\text.hpp" />
     <ClInclude Include="src\texture.hpp" />
