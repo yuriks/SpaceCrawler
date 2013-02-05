@@ -41,12 +41,14 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.bullet_buffer.clear();
 	draw_state.ui_buffer.clear();
 
+	const FontInfo ui_font(' ', 8, 8, 0, 0, 16, 6);
+
 	static const float starfield_parallax = 16.0f;
 	vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) / starfield_parallax;
 	drawStarfield(draw_state, 0, starfield_pos);
 
 	for (const Drone& drone : game_state.drones) {
-		drone.draw(draw_state.sprite_buffer, game_state.camera);
+		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, ui_font, game_state.camera);
 	}
 	for (const Bullet& bullet : game_state.bullets) {
 		bullet.draw(draw_state.bullet_buffer, game_state.camera);
@@ -59,8 +61,6 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 		const std::string min_text = "MIN: " + formatFrametimeFloat(game_state.frametime_min * 1000.0f);
 		const std::string avg_text = "AVG: " + formatFrametimeFloat(game_state.frametime_avg * 1000.0f);
 		const std::string max_text = "MAX: " + formatFrametimeFloat(game_state.frametime_max * 1000.0f);
-
-		const FontInfo ui_font(' ', 8, 8, 0, 0, 16, 6);
 
 		drawString(WINDOW_WIDTH, 0*8, fps_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
 		drawString(WINDOW_WIDTH, 1*8, min_text, draw_state.ui_buffer, ui_font, TextAlignment::right);
@@ -96,9 +96,10 @@ void updateScene(GameState& game_state) {
 	remove_if(game_state.bullets, [&](const Bullet& bullet) -> bool {
 		if (bullet.life == 0)
 			return true;
-		for (const Drone& drone : game_state.drones) {
+		for (Drone& drone : game_state.drones) {
 			vec2 rel_pos = drone.rb.pos - bullet.rb.pos;
 			if (collideCircleRectangle(rel_pos, 8.0f, mvec2(13.0f / 2, 3.0f / 2), bullet.angle)) {
+				drone.getHit(1);
 				return true;
 			}
 		}
