@@ -26,14 +26,15 @@ void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, con
 void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, TextAlignment alignment) {
 	switch (alignment) {
 	case TextAlignment::left:
-		drawString(x, y, text, buffer, font);
 		break;
 	case TextAlignment::right:
-		drawString(x - measureStringWidth(text, font), y, text, buffer, font);
+		x = x - measureStringWidth(text, font);
 		break;
 	case TextAlignment::center:
 		// The weird position dance is so that it rounds down instead of up.
-		drawString((2*x - measureStringWidth(text, font)) / 2, y, text, buffer, font);
+		x = (2*x - measureStringWidth(text, font)) / 2;
 		break;
 	}
+
+	drawString(x, y, text, buffer, font);
 }
