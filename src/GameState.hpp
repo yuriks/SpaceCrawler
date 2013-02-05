@@ -17,6 +17,6 @@ struct GameState {
 	double frametime_min, frametime_avg, frametime_max, fps;
 
 	Ship player_ship;
-	std::array<Drone, 8> drones;
+	std::array<Drone, 24> drones;
 	std::vector<Bullet> bullets;
 };

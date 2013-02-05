@@ -163,7 +163,9 @@ int main() {
 	}
 	for (Drone& drone : game_state.drones) {
 		drone.init(rng);
-		drone.rb.pos = mPosition(randRange(rng, 64, WINDOW_WIDTH - 64 - 1), randRange(rng, 64, WINDOW_HEIGHT - 64 - 1));
+		drone.rb.pos = mPosition(
+			randRange(rng, -WINDOW_WIDTH,  2 * WINDOW_WIDTH  - 1),
+			randRange(rng, -WINDOW_HEIGHT, 2 * WINDOW_HEIGHT - 1));
 	}
 
 	////////////////////
