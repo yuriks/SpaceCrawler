@@ -5,10 +5,11 @@ int measureStringWidth(const std::string& text, const FontInfo& font) {
 	return text.length() * font.char_w;
 }
 
-void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font) {
+void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, const Color& color) {
 	Sprite spr;
 	spr.setPos(x, y);
 	spr.setImg(font.img_x, font.img_y, font.char_w, font.char_h);
+	spr.color = color;
 
 	for (char c : text) {
 		const int grid_pos = c - font.first_char;
@@ -23,7 +24,7 @@ void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, con
 	}
 }
 
-void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, TextAlignment alignment) {
+void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, TextAlignment alignment, const Color& color) {
 	switch (alignment) {
 	case TextAlignment::left:
 		break;
@@ -36,5 +37,5 @@ void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, con
 		break;
 	}
 
-	drawString(x, y, text, buffer, font);
+	drawString(x, y, text, buffer, font, color);
 }

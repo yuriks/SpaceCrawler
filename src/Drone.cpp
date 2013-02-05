@@ -40,10 +40,12 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 		sprite_buffer.append(drone_spr, matrix);
 	}
 
-	drawString(drone_spr.x, drone_spr.y,
-		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, font);
-	drawString(drone_spr.x, drone_spr.y + font.char_h,
-		"SHLD: " + std::to_string(current_shield) + "/" + std::to_string(max_shield), ui_buffer, font);
+	static const Color ui_color = {{17, 133, 209, 0}};
+
+	drawString(drone_spr.x + 16, drone_spr.y - 16 - font.char_h,
+		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, font, ui_color);
+	drawString(drone_spr.x + 16, drone_spr.y - 16,
+		"SHLD: " + std::to_string(current_shield) + "/" + std::to_string(max_shield), ui_buffer, font, ui_color);
 }
 
 void Drone::update() {

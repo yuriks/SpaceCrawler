@@ -22,6 +22,8 @@ inline Color makeColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	return c;
 }
 
+static const Color color_white = {{255, 255, 255, 255}};
+
 struct IntRect {
 	int x, y;
 	int h, w;

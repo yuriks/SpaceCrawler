@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-
-struct SpriteBuffer;
+#include "SpriteBuffer.hpp"
 
 struct FontInfo {
 	char first_char;
@@ -22,5 +21,5 @@ enum class TextAlignment {
 };
 
 int measureStringWidth(const std::string& text, const FontInfo& font);
-void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font);
-void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, TextAlignment alignment);
+void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, const Color& color);
+void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, const FontInfo& font, TextAlignment alignment, const Color& color);
