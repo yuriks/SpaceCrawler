@@ -14,7 +14,7 @@ static const Color color_white = {{255, 255, 255, 255}};
 
 struct IntRect {
 	int x, y;
-	int h, w;
+	int w, h;
 };
 
 struct Sprite {
