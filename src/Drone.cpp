@@ -8,6 +8,10 @@
 
 static const int STROBE_INTERVAL = 60*3;
 
+static const IntRect img_body          = {34,  1, 24, 24};
+static const IntRect img_strobe_yellow = {34, 26, 24, 24};
+static const IntRect img_strobe_red    = {34, 51, 24, 24};
+
 void Drone::init(RandomGenerator& rng) {
 	max_hull = 10;
 	max_shield = 20;
@@ -22,7 +26,7 @@ void Drone::init(RandomGenerator& rng) {
 
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const {
 	Sprite drone_spr;
-	drone_spr.setImg(34, 1, 24, 24);
+	drone_spr.img = img_body;
 	drone_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix matrix;
@@ -31,12 +35,12 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 	sprite_buffer.append(drone_spr, matrix);
 
 	if (anim_flags.test(AnimationFlags::YELLOW_STROBE)) {
-		drone_spr.img.y = 1+1*25;
+		drone_spr.img = img_strobe_yellow;
 		sprite_buffer.append(drone_spr, matrix);
 	}
 
 	if (anim_flags.test(AnimationFlags::RED_STROBE)) {
-		drone_spr.img.y = 1+2*25;
+		drone_spr.img = img_strobe_red;
 		sprite_buffer.append(drone_spr, matrix);
 	}
 

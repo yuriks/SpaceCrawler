@@ -5,6 +5,10 @@
 #include "Bullet.hpp"
 #include "Camera.hpp"
 
+static const IntRect img_ship_body   = {1,  1, 32, 24};
+static const IntRect img_ship_thrust = {1, 26, 32, 24};
+static const IntRect img_ship_brake  = {1, 51, 32, 24};
+
 void Ship::init() {
 	angle = 0;
 	shoot_cooldown = 0;
@@ -12,7 +16,7 @@ void Ship::init() {
 
 void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite ship_spr;
-	ship_spr.setImg(1, 1, 32, 24);
+	ship_spr.img = img_ship_body;
 	ship_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix matrix;
@@ -21,12 +25,12 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	sprite_buffer.append(ship_spr, matrix);
 
 	if (anim_flags.test(AnimationFlags::THRUST_FORWARD)) {
-		ship_spr.setImg(1, 1+1*25, 32, 24);
+		ship_spr.img = img_ship_thrust;
 		sprite_buffer.append(ship_spr, matrix);
 	}
 
 	if (anim_flags.test(AnimationFlags::INERTIAL_BRAKE)) {
-		ship_spr.setImg(1, 1+2*25, 32, 24);
+		ship_spr.img = img_ship_brake;
 		sprite_buffer.append(ship_spr, matrix);
 	}
 }
