@@ -7,6 +7,7 @@
 #include "texture.hpp"
 #include "gl/Buffer.hpp"
 #include "Sprite.hpp"
+#include "vec2.hpp"
 
 struct VertexData {
 	GLfloat pos_x, pos_y;
@@ -21,8 +22,10 @@ struct SpriteMatrix {
 
 	SpriteMatrix& loadIdentity();
 	SpriteMatrix& multiply(const SpriteMatrix& l);
-	SpriteMatrix& rotate(float degrees);
+	SpriteMatrix& rotate(vec2 complex);
+	SpriteMatrix& rotate(float radians) { return rotate(complex_from_angle(radians)); }
 	SpriteMatrix& scale(float x, float y);
+	SpriteMatrix& scale(float s) { return scale(s, s); }
 	SpriteMatrix& shear(float x, float y);
 
 	void transform(float* x, float* y);

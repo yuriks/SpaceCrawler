@@ -35,9 +35,9 @@ SpriteMatrix& SpriteMatrix::multiply(const SpriteMatrix& l) {
 	return *this;
 }
 
-SpriteMatrix& SpriteMatrix::rotate(float radians) {
-	float sin_t = std::sin(radians);
-	float cos_t = std::cos(radians);
+SpriteMatrix& SpriteMatrix::rotate(vec2 complex) {
+	float sin_t = complex.y;
+	float cos_t = complex.x;
 
 	SpriteMatrix rotate_m = {{
 		cos_t, -sin_t,
