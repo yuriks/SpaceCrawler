@@ -48,6 +48,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>src/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,7 +87,10 @@
     <ClCompile Include="src\resources.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\SpriteBuffer.cpp" />
-    <ClCompile Include="src\starfield.cpp" />
+    <ClCompile Include="src\starfield.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Full</Optimization>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+    </ClCompile>
     <ClCompile Include="src\stb_image.c" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
