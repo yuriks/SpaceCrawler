@@ -5,6 +5,11 @@ struct vec2 {
 	float x, y;
 };
 
+static const vec2 vec2_0 = {0.0f, 0.0f};
+static const vec2 vec2_1 = {1.0f, 1.0f};
+static const vec2 vec2_x = {1.0f, 0.0f};
+static const vec2 vec2_y = {0.0f, 1.0f};
+
 inline vec2 mvec2(float x, float y) {
 	vec2 tmp = {x, y};
 	return tmp;
@@ -45,6 +50,8 @@ inline float dot(const vec2 a, const vec2 b) {
 inline float length_sqr(const vec2 v) {
 	return dot(v, v);
 }
+
+static const vec2 complex_1 = {1.0f, 0.0f};
 
 inline vec2 complex_mul(const vec2 a, const vec2 b) {
 	return mvec2(a.x*b.x - a.y*b.y, a.y*b.x + a.x*b.y);
