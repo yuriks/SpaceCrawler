@@ -15,7 +15,7 @@ void Bullet::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	bullet_spr.color = makeColor(alpha, alpha, alpha, alpha);
 
 	SpriteMatrix bullet_matrix;
-	bullet_matrix.loadIdentity().rotate(rb.angle);
+	bullet_matrix.loadIdentity().rotate(rb.orientation);
 
 	sprite_buffer.append(bullet_spr, bullet_matrix);
 }

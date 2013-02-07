@@ -19,8 +19,8 @@ void Drone::init(RandomGenerator& rng) {
 	current_shield = max_shield;
 	shield_recharge_delay = -1;
 
-	rb.angle = randRange(rng, 0.0f, DOUBLE_PI);
-	rb.angle_rate = randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f);
+	rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
+	rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f));
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
 }
 
@@ -30,7 +30,7 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 	drone_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix matrix;
-	matrix.loadIdentity().rotate(rb.angle);
+	matrix.loadIdentity().rotate(rb.orientation);
 
 	sprite_buffer.append(drone_spr, matrix);
 

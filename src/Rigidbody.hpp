@@ -3,15 +3,23 @@
 #include "vec2.hpp"
 
 struct Rigidbody : PhysParticle {
-	float angle;
-	float angle_rate;
+	vec2 orientation;
+	vec2 angular_vel;
 
 	inline Rigidbody()
-		: angle_rate(0.0f)
+		: angular_vel(complex_1)
 	{ }
+
+	inline void setOrientation(float radians) {
+		orientation = complex_from_angle(radians);
+	}
+
+	inline void setAngularVel(float radians_per_frame) {
+		angular_vel = complex_from_angle(radians_per_frame);
+	}
 
 	inline void update() {
 		PhysParticle::update();
-		angle += angle_rate;
+		orientation = complex_mul(orientation, angular_vel);
 	}
 };

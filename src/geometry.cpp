@@ -17,7 +17,7 @@ bool collideCircleAARectangle(vec2 cp, float cr, vec2 r) {
 	return length_sqr(circDist) <= cr*cr;
 }
 
-bool collideCircleRectangle(vec2 circle_position, float circle_radius, vec2 rect_size, float rect_angle) {
-	vec2 rotated_circle = complex_mul(circle_position, complex_from_angle(-rect_angle));
+bool collideCircleRectangle(vec2 circle_position, float circle_radius, vec2 rect_size, vec2 rect_orientation) {
+	vec2 rotated_circle = complex_mul(circle_position, complex_conjugate(rect_orientation));
 	return collideCircleAARectangle(rotated_circle, circle_radius, rect_size);
 }
