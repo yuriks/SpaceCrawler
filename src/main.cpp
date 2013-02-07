@@ -43,9 +43,11 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	const FontInfo ui_font(' ', 8, 8, 0, 0, 16, 6);
 
-	static const float starfield_parallax = 16.0f;
-	vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) / starfield_parallax;
-	drawStarfield(draw_state, 0, starfield_pos);
+	static const float starfield_parallax = 1.0f / 32.0f;
+	for (int i = 0; i < 4; ++i) {
+		vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) * starfield_parallax * (float)i;
+		drawStarfield(draw_state, i*10, starfield_pos);
+	}
 
 	for (const Drone& drone : game_state.drones) {
 		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, ui_font, game_state.camera);

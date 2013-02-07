@@ -6,7 +6,7 @@
 #include "Camera.hpp"
 
 static const int starfield_sector_size = 512/2;
-static const int max_stars_per_sector = 64;
+static const int max_stars_per_sector = 32;
 
 static const std::array<IntRect, 6> star_types = {{
 	{1, 1, 1, 1},
