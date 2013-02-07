@@ -2,11 +2,11 @@
 #include "Position.hpp"
 #include "vec2.hpp"
 
-struct Rigidbody {
+struct PhysParticle {
 	Position pos;
 	vec2 vel;
 
-	inline Rigidbody()
+	inline PhysParticle()
 		: vel(mvec2(0.0f, 0.0f))
 	{
 	}

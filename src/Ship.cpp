@@ -17,7 +17,7 @@ void Ship::init() {
 void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite ship_spr;
 	ship_spr.img = img_ship_body;
-	ship_spr.setPos(camera.transform(rb.pos));
+	ship_spr.setPos(camera.transform(physp.pos));
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);
@@ -52,18 +52,18 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 
 	if (input.test(InputButtons::THRUST)) {
 		vec2 accel = 0.05f * complex_from_angle(angle);
-		rb.vel = rb.vel + accel;
+		physp.vel = physp.vel + accel;
 		anim_flags.set(AnimationFlags::THRUST_FORWARD);
 	} else if (input.test(InputButtons::BRAKE)) {
-		rb.vel = rb.vel * 0.96f;
+		physp.vel = physp.vel * 0.96f;
 		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
 	}
 
 	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {
 		Bullet bullet;
-		bullet.rb.pos = rb.pos;
+		bullet.physp.pos = physp.pos;
 		bullet.angle = angle;
-		bullet.rb.vel = rb.vel + complex_from_angle(angle) * 4.0f;
+		bullet.physp.vel = physp.vel + complex_from_angle(angle) * 4.0f;
 
 		game_state.bullets.push_back(bullet);
 		shoot_cooldown = 5;
@@ -72,5 +72,5 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 		--shoot_cooldown;
 	}
 
-	rb.update();
+	physp.update();
 }

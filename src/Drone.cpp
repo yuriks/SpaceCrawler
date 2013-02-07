@@ -27,7 +27,7 @@ void Drone::init(RandomGenerator& rng) {
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const {
 	Sprite drone_spr;
 	drone_spr.img = img_body;
-	drone_spr.setPos(camera.transform(rb.pos));
+	drone_spr.setPos(camera.transform(physp.pos));
 
 	SpriteMatrix matrix;
 	matrix.loadIdentity().rotate(angle);
@@ -74,7 +74,7 @@ void Drone::update() {
 	}
 
 	angle += angle_rate;
-	rb.update();
+	physp.update();
 }
 
 void Drone::getHit(const int damage_amount) {

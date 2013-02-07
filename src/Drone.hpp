@@ -1,5 +1,5 @@
 #pragma once
-#include "Rigidbody.hpp"
+#include "PhysParticle.hpp"
 #include "util.hpp"
 #include <bitset>
 
@@ -18,7 +18,7 @@ struct Drone {
 		typedef std::bitset<MAX> Bitset;
 	};
 
-	Rigidbody rb;
+	PhysParticle physp;
 	float angle;
 	float angle_rate;
 

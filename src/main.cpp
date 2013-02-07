@@ -99,7 +99,7 @@ void updateScene(GameState& game_state) {
 		if (bullet.life == 0)
 			return true;
 		for (Drone& drone : game_state.drones) {
-			vec2 rel_pos = drone.rb.pos - bullet.rb.pos;
+			vec2 rel_pos = drone.physp.pos - bullet.physp.pos;
 			if (collideCircleRectangle(rel_pos, 8.0f, mvec2(13.0f / 2, 3.0f / 2), bullet.angle)) {
 				drone.getHit(1);
 				return true;
@@ -108,7 +108,7 @@ void updateScene(GameState& game_state) {
 		return false;
 	});
 
-	game_state.camera.pos = game_state.player_ship.rb.pos;
+	game_state.camera.pos = game_state.player_ship.physp.pos;
 }
 
 int main() {
@@ -161,11 +161,11 @@ int main() {
 	{
 		Ship& ship = game_state.player_ship;
 		ship.init();
-		ship.rb.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		ship.physp.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
 	for (Drone& drone : game_state.drones) {
 		drone.init(rng);
-		drone.rb.pos = mPosition(
+		drone.physp.pos = mPosition(
 			randRange(rng, -WINDOW_WIDTH,  2 * WINDOW_WIDTH  - 1),
 			randRange(rng, -WINDOW_HEIGHT, 2 * WINDOW_HEIGHT - 1));
 	}

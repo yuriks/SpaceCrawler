@@ -1,11 +1,11 @@
 #pragma once
-#include "Rigidbody.hpp"
+#include "PhysParticle.hpp"
 
 struct SpriteBuffer;
 struct Camera;
 
 struct Bullet {
-	Rigidbody rb;
+	PhysParticle physp;
 	float angle;
 	int life;
 
