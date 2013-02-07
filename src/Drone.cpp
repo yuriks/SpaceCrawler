@@ -19,18 +19,18 @@ void Drone::init(RandomGenerator& rng) {
 	current_shield = max_shield;
 	shield_recharge_delay = -1;
 
-	angle = randRange(rng, 0.0f, DOUBLE_PI);
-	angle_rate = randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f);
+	rb.angle = randRange(rng, 0.0f, DOUBLE_PI);
+	rb.angle_rate = randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f);
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
 }
 
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const {
 	Sprite drone_spr;
 	drone_spr.img = img_body;
-	drone_spr.setPos(camera.transform(physp.pos));
+	drone_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix matrix;
-	matrix.loadIdentity().rotate(angle);
+	matrix.loadIdentity().rotate(rb.angle);
 
 	sprite_buffer.append(drone_spr, matrix);
 
@@ -73,8 +73,7 @@ void Drone::update() {
 		}
 	}
 
-	angle += angle_rate;
-	physp.update();
+	rb.update();
 }
 
 void Drone::getHit(const int damage_amount) {
