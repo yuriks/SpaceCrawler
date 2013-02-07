@@ -10,17 +10,17 @@ static const IntRect img_ship_thrust = {1, 26, 32, 24};
 static const IntRect img_ship_brake  = {1, 51, 32, 24};
 
 void Ship::init() {
-	angle = 0;
+	rb.orientation = vec2_x;
 	shoot_cooldown = 0;
 }
 
 void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite ship_spr;
 	ship_spr.img = img_ship_body;
-	ship_spr.setPos(camera.transform(physp.pos));
+	ship_spr.setPos(camera.transform(rb.pos));
 
 	SpriteMatrix matrix;
-	matrix.loadIdentity().rotate(angle);
+	matrix.loadIdentity().rotate(rb.orientation);
 
 	sprite_buffer.append(ship_spr, matrix);
 
@@ -37,33 +37,38 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 
 void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
+	static const vec2 turning_vel = complex_from_angle(TURNING_SPEED);
 
 	anim_flags.reset();
 
 	if (input.test(InputButtons::LEFT)) {
-		angle -= TURNING_SPEED;
+		rb.angular_vel = complex_conjugate(turning_vel);
 		anim_flags.set(AnimationFlags::THRUST_CCW);
 	}
 
 	if (input.test(InputButtons::RIGHT)) {
-		angle += TURNING_SPEED;
+		rb.angular_vel = turning_vel;
 		anim_flags.set(AnimationFlags::THRUST_CW);
 	}
 
+	if (input.test(InputButtons::LEFT) == input.test(InputButtons::RIGHT)) {
+		rb.angular_vel = complex_1;
+	}
+
 	if (input.test(InputButtons::THRUST)) {
-		vec2 accel = 0.05f * complex_from_angle(angle);
-		physp.vel = physp.vel + accel;
+		vec2 accel = 0.05f * rb.orientation;
+		rb.vel = rb.vel + accel;
 		anim_flags.set(AnimationFlags::THRUST_FORWARD);
 	} else if (input.test(InputButtons::BRAKE)) {
-		physp.vel = physp.vel * 0.96f;
+		rb.vel = 0.96f * rb.vel;
 		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
 	}
 
 	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {
 		Bullet bullet;
-		bullet.rb.pos = physp.pos;
-		bullet.rb.setOrientation(angle);
-		bullet.rb.vel = physp.vel + complex_from_angle(angle) * 4.0f;
+		bullet.rb.pos = rb.pos;
+		bullet.rb.orientation = rb.orientation;
+		bullet.rb.vel = rb.vel + 4.0f * rb.orientation;
 
 		game_state.bullets.push_back(bullet);
 		shoot_cooldown = 5;
@@ -72,5 +77,5 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 		--shoot_cooldown;
 	}
 
-	physp.update();
+	rb.update();
 }

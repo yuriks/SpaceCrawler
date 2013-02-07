@@ -108,7 +108,7 @@ void updateScene(GameState& game_state) {
 		return false;
 	});
 
-	game_state.camera.pos = game_state.player_ship.physp.pos;
+	game_state.camera.pos = game_state.player_ship.rb.pos;
 }
 
 int main() {
@@ -161,7 +161,7 @@ int main() {
 	{
 		Ship& ship = game_state.player_ship;
 		ship.init();
-		ship.physp.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		ship.rb.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
 	for (Drone& drone : game_state.drones) {
 		drone.init(rng);

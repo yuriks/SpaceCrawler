@@ -1,6 +1,6 @@
 #pragma once
 #include "game_types.hpp"
-#include "PhysParticle.hpp"
+#include "Rigidbody.hpp"
 #include <bitset>
 
 struct SpriteBuffer;
@@ -20,8 +20,7 @@ struct Ship {
 		typedef std::bitset<MAX> Bitset;
 	};
 
-	PhysParticle physp;
-	float angle;
+	Rigidbody rb;
 
 	int shoot_cooldown;
 
