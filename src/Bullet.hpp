@@ -1,11 +1,12 @@
 #pragma once
-#include "Rigidbody.hpp"
+#include "PhysParticle.hpp"
 
 struct SpriteBuffer;
 struct Camera;
 
 struct Bullet {
-	Rigidbody rb;
+	PhysParticle physp;
+	vec2 orientation;
 	int life;
 
 	Bullet() : life(60*10) { }

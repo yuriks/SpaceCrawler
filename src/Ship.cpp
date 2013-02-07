@@ -66,9 +66,9 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 
 	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {
 		Bullet bullet;
-		bullet.rb.pos = rb.pos;
-		bullet.rb.orientation = rb.orientation;
-		bullet.rb.vel = rb.vel + 4.0f * rb.orientation;
+		bullet.physp.pos = rb.pos;
+		bullet.orientation = rb.orientation;
+		bullet.physp.vel = rb.vel + 4.0f * rb.orientation;
 
 		game_state.bullets.push_back(bullet);
 		shoot_cooldown = 5;

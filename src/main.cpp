@@ -99,8 +99,8 @@ void updateScene(GameState& game_state) {
 		if (bullet.life == 0)
 			return true;
 		for (Drone& drone : game_state.drones) {
-			vec2 rel_pos = drone.rb.pos - bullet.rb.pos;
-			if (collideCircleRectangle(rel_pos, 8.0f, mvec2(13.0f / 2, 3.0f / 2), bullet.rb.orientation)) {
+			vec2 rel_pos = drone.rb.pos - bullet.physp.pos;
+			if (collideCircleRectangle(rel_pos, 8.0f, mvec2(13.0f / 2, 3.0f / 2), bullet.orientation)) {
 				drone.getHit(1);
 				return true;
 			}
