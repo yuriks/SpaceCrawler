@@ -5,12 +5,20 @@
 #include "debug_sprite.hpp"
 #include "Camera.hpp"
 #include "text.hpp"
+#include <array>
 
 static const int STROBE_INTERVAL = 60*3;
 
 static const IntRect img_body          = {34,  1, 24, 24};
 static const IntRect img_strobe_yellow = {34, 26, 24, 24};
 static const IntRect img_strobe_red    = {34, 51, 24, 24};
+
+static const std::array<IntRect, 4> img_debris = {{
+	{41, 76, 8, 8},
+	{50, 76, 8, 8},
+	{41, 85, 8, 8},
+	{50, 85, 8, 8}
+}};
 
 void Drone::init(RandomGenerator& rng) {
 	max_hull = 10;
@@ -86,5 +94,23 @@ void Drone::getHit(const int damage_amount) {
 		if (current_hull < 0) {
 			current_hull = 0;
 		}
+	}
+}
+
+void Drone::spawnDebris(std::vector<Debris>& debris_vec, RandomGenerator& rng) const {
+	Debris d;
+	d.rb.pos = rb.pos;
+	d.life = 240;
+
+	int num_debris = randRange(rng, 4, 8);
+	for (int i = 0; i < num_debris; ++i) {
+		float vel_magnitude = randRange(rng, 0.25f, 1.5f);
+		d.rb.vel = vel_magnitude * complex_from_angle(randRange(rng, 0.0f, DOUBLE_PI));
+		d.rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
+		d.rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.01f, DOUBLE_PI*0.01f));
+
+		d.img = randElement(rng, img_debris);
+
+		debris_vec.push_back(d);
 	}
 }

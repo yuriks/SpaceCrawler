@@ -52,6 +52,9 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	for (const Drone& drone : game_state.drones) {
 		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, ui_font, game_state.camera);
 	}
+	for (const Debris& debris : game_state.debris) {
+		debris.draw(draw_state.sprite_buffer, game_state.camera);
+	}
 	for (const Bullet& bullet : game_state.bullets) {
 		bullet.draw(draw_state.bullet_buffer, game_state.camera);
 	}
@@ -106,6 +109,22 @@ void updateScene(GameState& game_state) {
 			}
 		}
 		return false;
+	});
+
+	// Kill drones with no health
+	remove_if(game_state.drones, [&](const Drone& drone) -> bool {
+		if (drone.current_hull > 0)
+			return false;
+
+		drone.spawnDebris(game_state.debris, game_state.rng);
+		return true;
+	});
+
+	for (Debris& debris : game_state.debris) {
+		debris.update();
+	}
+	remove_if(game_state.debris, [&](const Debris& debris) -> bool {
+		return debris.life == 0;
 	});
 
 	game_state.camera.pos = game_state.player_ship.rb.pos;
@@ -163,6 +182,8 @@ int main() {
 		ship.init();
 		ship.rb.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
+
+	game_state.drones.resize(24);
 	for (Drone& drone : game_state.drones) {
 		drone.init(rng);
 		drone.rb.pos = mPosition(

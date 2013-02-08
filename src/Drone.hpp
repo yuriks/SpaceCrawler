@@ -2,10 +2,12 @@
 #include "Rigidbody.hpp"
 #include "util.hpp"
 #include <bitset>
+#include <vector>
 
 struct SpriteBuffer;
 struct Camera;
 struct FontInfo;
+struct Debris;
 
 struct Drone {
 	struct AnimationFlags {
@@ -33,4 +35,5 @@ struct Drone {
 	void draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const;
 	void update();
 	void getHit(const int damage_amount);
+	void spawnDebris(std::vector<Debris>& debris_vec, RandomGenerator& rng) const;
 };

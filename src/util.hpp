@@ -52,6 +52,11 @@ inline bool randBool(RandomGenerator& r) {
 	return randRange(r, 1) == 1;
 }
 
+template <typename T>
+inline typename T::const_reference randElement(RandomGenerator& r, const T& container) {
+	return container[randRange(r, container.size() - 1)];
+}
+
 static const float DOUBLE_PI = 6.2831854f;
 static const float DEG_TO_RAD = 0.017453292f;
 
