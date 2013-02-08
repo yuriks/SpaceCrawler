@@ -36,7 +36,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 }
 
 void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
-	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
+	static const float TURNING_SPEED = radiansFromDegrees(3.0f);
 	static const vec2 turning_vel = complex_from_angle(TURNING_SPEED);
 
 	anim_flags.reset();
