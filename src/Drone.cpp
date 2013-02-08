@@ -102,12 +102,12 @@ void Drone::spawnDebris(std::vector<Debris>& debris_vec, RandomGenerator& rng) c
 	d.rb.pos = rb.pos;
 	d.life = 240;
 
-	int num_debris = randRange(rng, 4, 8);
+	int num_debris = randRange(rng, 8, 32);
 	for (int i = 0; i < num_debris; ++i) {
 		float vel_magnitude = randRange(rng, 0.25f, 1.5f);
 		d.rb.vel = vel_magnitude * complex_from_angle(randRange(rng, 0.0f, DOUBLE_PI));
 		d.rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
-		d.rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.01f, DOUBLE_PI*0.01f));
+		d.rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.05f, DOUBLE_PI*0.05f));
 
 		d.img = randElement(rng, img_debris);
 
