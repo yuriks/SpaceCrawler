@@ -12,6 +12,7 @@ static const int STROBE_INTERVAL = 60*3;
 static const IntRect img_body          = {34,  1, 24, 24};
 static const IntRect img_strobe_yellow = {34, 26, 24, 24};
 static const IntRect img_strobe_red    = {34, 51, 24, 24};
+static const IntRect img_shield_hit    = {42, 94, 16, 32};
 
 static const std::array<IntRect, 4> img_debris = {{
 	{41, 76, 8, 8},
@@ -30,6 +31,7 @@ void Drone::init(RandomGenerator& rng) {
 	rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
 	rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f));
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
+	hit_anim_counter = 0;
 }
 
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const {
@@ -50,6 +52,20 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 	if (anim_flags.test(AnimationFlags::RED_STROBE)) {
 		drone_spr.img = img_strobe_red;
 		sprite_buffer.append(drone_spr, matrix);
+	}
+
+	if (hit_anim_counter > 0) {
+		Sprite shield_spr;
+		shield_spr.img = img_shield_hit;
+		int center_offset = 16 - img_shield_hit.w/2;
+		shield_spr.x = drone_spr.x + static_cast<int>(center_offset * hit_direction.x);
+		shield_spr.y = drone_spr.y + static_cast<int>(center_offset * hit_direction.y);
+		shield_spr.color = makeColor(0, 156, 255, 0);
+
+		SpriteMatrix shield_matrix;
+		shield_matrix.loadIdentity().rotate(hit_direction);
+
+		sprite_buffer.append(shield_spr, shield_matrix);
 	}
 
 	static const Color ui_color = {{49, 209, 17, 0}};
@@ -73,6 +89,9 @@ void Drone::update() {
 	if (++anim_counter == STROBE_INTERVAL) {
 		anim_counter = 0;
 	}
+	if (hit_anim_counter > 0) {
+		--hit_anim_counter;
+	}
 
 	if (current_shield < max_shield) {
 		if (--shield_recharge_delay == 0) {
@@ -84,8 +103,13 @@ void Drone::update() {
 	rb.update();
 }
 
-void Drone::getHit(const int damage_amount) {
+void Drone::getHit(const int damage_amount, vec2 rel_pos) {
 	shield_recharge_delay = 120;
+
+	if (current_shield > 0) {
+		hit_anim_counter = 2;
+		hit_direction = normalized(rel_pos);
+	}
 
 	current_shield -= damage_amount;
 	if (current_shield < 0) {

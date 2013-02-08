@@ -51,6 +51,10 @@ inline float length_sqr(const vec2 v) {
 	return dot(v, v);
 }
 
+inline vec2 normalized(const vec2 v) {
+	return v / std::sqrt(length_sqr(v));
+}
+
 static const vec2 complex_1 = {1.0f, 0.0f};
 
 inline vec2 complex_mul(const vec2 a, const vec2 b) {
