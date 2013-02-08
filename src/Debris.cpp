@@ -12,7 +12,7 @@ void Debris::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	Sprite spr;
 	spr.img = img;
 	spr.setPos(camera.transform(rb.pos));
-	uint8_t alpha = std::min(life * 32, 255);
+	uint8_t alpha = std::min(life * 2, 255);
 	spr.color = makeColor(alpha, alpha, alpha, alpha);
 
 	SpriteMatrix bullet_matrix;
