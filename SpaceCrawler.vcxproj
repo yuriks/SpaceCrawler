@@ -95,6 +95,7 @@
     <ClCompile Include="src\stb_image.c" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Bullet.hpp" />

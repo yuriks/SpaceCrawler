@@ -15,6 +15,10 @@ inline vec2 mvec2(float x, float y) {
 	return tmp;
 }
 
+inline bool operator ==(const vec2 a, const vec2 b) {
+	return a.x == b.x && a.y == b.y;
+}
+
 inline vec2 operator +(const vec2 a, const vec2 b) {
 	return mvec2(a.x + b.x, a.y + b.y);
 }
@@ -68,3 +72,18 @@ inline vec2 complex_from_angle(float radians) {
 inline vec2 complex_conjugate(const vec2 c) {
 	return mvec2(c.x, -c.y);
 }
+
+inline bool linearly_dependent(const vec2 a, const vec2 b) {
+	return a.x*b.y - a.y*b.x < 1e-4f;
+}
+
+inline vec2 lerp(const vec2 a, const vec2 b, float t) {
+	return (1.0f - t)*a + t*b;
+}
+
+inline vec2 nlerp(const vec2 a, const vec2 b, float t) {
+	return normalized(lerp(a, b, t));
+}
+
+vec2 slerp(vec2 a, vec2 b, float t);
+vec2 rotateTowards(vec2 a, vec2 b, float max_angle);
