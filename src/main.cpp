@@ -73,6 +73,12 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 		drawString(WINDOW_WIDTH, 3*8, max_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
 	}
 
+	Sprite mouse_cursor;
+	mouse_cursor.setImg(10, 48, 11, 11);
+	mouse_cursor.color = makeColor(49, 209, 17, 255);
+	mouse_cursor.setPos(game_state.mouse_x - 5, game_state.mouse_y - 5);
+	draw_state.ui_buffer.append(mouse_cursor);
+
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.background_buffer.draw(draw_state.sprite_buffer_indices);
@@ -82,12 +88,17 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 }
 
 void updateScene(GameState& game_state) {
-	InputButtons::Bitset input;
+	InputButtons::Bitset& input = game_state.input;
 	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
-	input.set(InputButtons::THRUST, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
-	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
-	input.set(InputButtons::SHOOT, glfwGetKey('X') == GL_TRUE);
+	input.set(InputButtons::THRUST, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
+	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
+	input.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
+	glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
+	game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);
+	game_state.mouse_y = clamp(0, game_state.mouse_y, WINDOW_HEIGHT-1);
+	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
+
 
 	game_state.player_ship.update(input, game_state);
 	for (Bullet& bullet : game_state.bullets) {
@@ -167,7 +178,7 @@ int main() {
 	draw_state.background_buffer.texture = loadTexture("background.png");
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
-	draw_state.ui_buffer.texture = loadTexture("font-8x8.png");
+	draw_state.ui_buffer.texture = loadTexture("ui.png");
 
 	CHECK_GL_ERROR;
 

@@ -24,6 +24,7 @@ bool initWindow(int width, int height) {
 		std::cerr << "Couldn't open window.\n";
 		return false;
 	}
+	glfwDisable(GLFW_MOUSE_CURSOR);
 
 	if (ogl_LoadFunctions() != ogl_LOAD_SUCCEEDED) {
 		std::cerr << "Couldn't init OpenGL functions.\n";

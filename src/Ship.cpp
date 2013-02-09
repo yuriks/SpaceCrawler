@@ -36,7 +36,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 }
 
 void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
-	static const float TURNING_SPEED = radiansFromDegrees(3.0f);
+	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 	static const vec2 turning_vel = complex_from_angle(TURNING_SPEED);
 
 	anim_flags.reset();
@@ -53,15 +53,19 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 
 	if (input.test(InputButtons::LEFT) == input.test(InputButtons::RIGHT)) {
 		rb.angular_vel = complex_1;
+		Position mouse_pos = game_state.camera.inverse_transform(
+			mvec2(static_cast<float>(game_state.mouse_x), static_cast<float>(game_state.mouse_y)));
+		vec2 mouse_orientation = normalized(mouse_pos - rb.pos);
+		rb.orientation = rotateTowards(rb.orientation, mouse_orientation, TURNING_SPEED);
 	}
 
-	if (input.test(InputButtons::THRUST)) {
+	if (input.test(InputButtons::BRAKE)) {
+		rb.vel = 0.96f * rb.vel;
+		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
+	} else if (input.test(InputButtons::THRUST)) {
 		vec2 accel = 0.05f * rb.orientation;
 		rb.vel = rb.vel + accel;
 		anim_flags.set(AnimationFlags::THRUST_FORWARD);
-	} else if (input.test(InputButtons::BRAKE)) {
-		rb.vel = 0.96f * rb.vel;
-		anim_flags.set(AnimationFlags::INERTIAL_BRAKE);
 	}
 
 	if (input.test(InputButtons::SHOOT) && shoot_cooldown == 0) {

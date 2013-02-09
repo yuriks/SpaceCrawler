@@ -12,6 +12,7 @@
 struct GameState {
 	RandomGenerator rng;
 	InputButtons::Bitset input;
+	int mouse_x, mouse_y;
 	Camera camera;
 
 	double frametime_min, frametime_avg, frametime_max, fps;
