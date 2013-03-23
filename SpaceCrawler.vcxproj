@@ -46,13 +46,13 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <AdditionalIncludeDirectories>src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;libs/include/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;GLFW.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -65,18 +65,19 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <AdditionalIncludeDirectories>src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;libs/include/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;GLFW.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="libs\src\stb_image.c" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Debris.cpp" />
     <ClCompile Include="src\debug_sprite.cpp" />
@@ -92,12 +93,13 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Full</Optimization>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
     </ClCompile>
-    <ClCompile Include="src\stb_image.c" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\include\GL\glfw.h" />
+    <ClInclude Include="libs\include\stb_image.h" />
     <ClInclude Include="src\Bullet.hpp" />
     <ClInclude Include="src\Camera.hpp" />
     <ClInclude Include="src\Debris.hpp" />
@@ -120,11 +122,13 @@
     <ClInclude Include="src\Sprite.hpp" />
     <ClInclude Include="src\SpriteBuffer.hpp" />
     <ClInclude Include="src\starfield.hpp" />
-    <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\text.hpp" />
     <ClInclude Include="src\texture.hpp" />
     <ClInclude Include="src\util.hpp" />
     <ClInclude Include="src\vec2.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\msvc110\GLFW.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
