@@ -27,6 +27,7 @@
 #include "util/geometry.hpp"
 #include "render/text.hpp"
 #include "starfield.hpp"
+#include "hud.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -41,8 +42,6 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.bullet_buffer.clear();
 	draw_state.ui_buffer.clear();
 
-	const FontInfo ui_font(' ', 8, 8, 0, 0, 16, 6);
-
 	static const float starfield_parallax = 1.0f / 32.0f;
 	for (int i = 0; i < 4; ++i) {
 		vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) * starfield_parallax * (float)i;
@@ -50,7 +49,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 
 	for (const Drone& drone : game_state.drones) {
-		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, ui_font, game_state.camera);
+		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, game_state.camera);
 	}
 	for (const Debris& debris : game_state.debris) {
 		debris.draw(draw_state.sprite_buffer, game_state.camera);
@@ -75,7 +74,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	Sprite mouse_cursor;
 	mouse_cursor.setImg(10, 48, 11, 11);
-	mouse_cursor.color = makeColor(49, 209, 17, 255);
+	mouse_cursor.color = hud_color;
 	mouse_cursor.setPos(game_state.mouse_x - 5, game_state.mouse_y - 5);
 	draw_state.ui_buffer.append(mouse_cursor);
 

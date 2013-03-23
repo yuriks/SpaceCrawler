@@ -5,6 +5,7 @@
 #include "render/debug_sprite.hpp"
 #include "Camera.hpp"
 #include "render/text.hpp"
+#include "hud.hpp"
 #include <array>
 
 static const int STROBE_INTERVAL = 60*3;
@@ -34,7 +35,7 @@ void Drone::init(RandomGenerator& rng) {
 	hit_anim_counter = 0;
 }
 
-void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const FontInfo& font, const Camera& camera) const {
+void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Camera& camera) const {
 	Sprite drone_spr;
 	drone_spr.img = img_body;
 	drone_spr.setPos(camera.transform(rb.pos));
@@ -68,12 +69,10 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 		sprite_buffer.append(shield_spr, shield_matrix);
 	}
 
-	static const Color ui_color = {49, 209, 17, 0};
-
-	drawString(drone_spr.x + 16, drone_spr.y - 16 - font.char_h,
-		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, font, ui_color);
+	drawString(drone_spr.x + 16, drone_spr.y - 16 - ui_font.char_h,
+		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, ui_font, hud_color);
 	drawString(drone_spr.x + 16, drone_spr.y - 16,
-		"SHLD: " + std::to_string(current_shield) + "/" + std::to_string(max_shield), ui_buffer, font, ui_color);
+		"SHLD: " + std::to_string(current_shield) + "/" + std::to_string(max_shield), ui_buffer, ui_font, hud_color);
 }
 
 void Drone::update() {
