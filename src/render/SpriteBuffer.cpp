@@ -138,7 +138,10 @@ void SpriteBuffer::append(const Sprite& spr) {
 	float img_h = spr.img.h / static_cast<float>(texture.height);
 
 	VertexData v;
-	v.color = spr.color;
+	v.color[0] = spr.color.r;
+	v.color[1] = spr.color.g;
+	v.color[2] = spr.color.b;
+	v.color[3] = spr.color.a;
 
 	v.pos_x = static_cast<float>(spr.x);
 	v.pos_y = static_cast<float>(spr.y);
@@ -168,7 +171,10 @@ void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
 	float img_h = spr.img.h / static_cast<float>(texture.height);
 
 	VertexData v;
-	v.color = spr.color;
+	v.color[0] = spr.color.r;
+	v.color[1] = spr.color.g;
+	v.color[2] = spr.color.b;
+	v.color[3] = spr.color.a;
 
 	float x = spr.img.w / 2.0f;
 	float y = spr.img.h / 2.0f;

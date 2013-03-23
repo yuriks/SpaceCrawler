@@ -2,7 +2,6 @@
 
 #include "gl/gl_1_5.h"
 #include <vector>
-#include <array>
 #include "graphics_init.hpp"
 #include "texture.hpp"
 #include "gl/Buffer.hpp"
@@ -12,7 +11,7 @@
 struct VertexData {
 	GLfloat pos_x, pos_y;
 	GLfloat tex_s, tex_t;
-	std::array<GLubyte, 4> color;
+	GLubyte color[4];
 
 	static void setupVertexAttribs();
 };

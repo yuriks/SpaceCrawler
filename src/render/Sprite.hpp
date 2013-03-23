@@ -4,13 +4,16 @@
 #include "util/vec2.hpp"
 #include <cstdint>
 
-typedef std::array<uint8_t, 4> Color;
+struct Color {
+	uint8_t r, g, b, a;
+};
+
 inline Color makeColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	Color c = {{r, g, b, a}};
+	Color c = {r, g, b, a};
 	return c;
 }
 
-static const Color color_white = {{255, 255, 255, 255}};
+static const Color color_white = {255, 255, 255, 255};
 
 struct IntRect {
 	int x, y;

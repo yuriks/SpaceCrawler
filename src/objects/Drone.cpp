@@ -68,7 +68,7 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Fon
 		sprite_buffer.append(shield_spr, shield_matrix);
 	}
 
-	static const Color ui_color = {{49, 209, 17, 0}};
+	static const Color ui_color = {49, 209, 17, 0};
 
 	drawString(drone_spr.x + 16, drone_spr.y - 16 - font.char_h,
 		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, font, ui_color);
