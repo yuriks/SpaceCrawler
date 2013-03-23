@@ -24,15 +24,17 @@ static const std::array<IntRect, 4> img_debris = {{
 
 void Drone::init(RandomGenerator& rng) {
 	max_hull = 10;
-	max_shield = 20;
 	current_hull = max_hull;
-	current_shield = max_shield;
-	shield_recharge_delay = -1;
+
+	shield.max_level = 20;
+	shield.hit_recharge_delay = 120;
+	shield.recharge_interval = 10;
+	shield.img_shield_hit = img_shield_hit;
+	shield.init();
 
 	rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
 	rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f));
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
-	hit_anim_counter = 0;
 }
 
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Camera& camera) const {
@@ -55,24 +57,12 @@ void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Cam
 		sprite_buffer.append(drone_spr, matrix);
 	}
 
-	if (hit_anim_counter > 0) {
-		Sprite shield_spr;
-		shield_spr.img = img_shield_hit;
-		int center_offset = 16 - img_shield_hit.w/2;
-		shield_spr.x = drone_spr.x + static_cast<int>(center_offset * hit_direction.x);
-		shield_spr.y = drone_spr.y + static_cast<int>(center_offset * hit_direction.y);
-		shield_spr.color = makeColor(0, 156, 255, 0);
-
-		SpriteMatrix shield_matrix;
-		shield_matrix.loadIdentity().rotate(hit_direction);
-
-		sprite_buffer.append(shield_spr, shield_matrix);
-	}
+	shield.draw(sprite_buffer, drone_spr.x, drone_spr.y);
 
 	drawString(drone_spr.x + 16, drone_spr.y - 16 - ui_font.char_h,
 		"HULL: " + std::to_string(current_hull) + "/" + std::to_string(max_hull), ui_buffer, ui_font, hud_color);
 	drawString(drone_spr.x + 16, drone_spr.y - 16,
-		"SHLD: " + std::to_string(current_shield) + "/" + std::to_string(max_shield), ui_buffer, ui_font, hud_color);
+		"SHLD: " + std::to_string(shield.cur_level) + "/" + std::to_string(shield.max_level), ui_buffer, ui_font, hud_color);
 }
 
 void Drone::update() {
@@ -88,32 +78,15 @@ void Drone::update() {
 	if (++anim_counter == STROBE_INTERVAL) {
 		anim_counter = 0;
 	}
-	if (hit_anim_counter > 0) {
-		--hit_anim_counter;
-	}
 
-	if (current_shield < max_shield) {
-		if (--shield_recharge_delay == 0) {
-			current_shield += 1;
-			shield_recharge_delay = 10;
-		}
-	}
-
+	shield.update();
 	rb.update();
 }
 
 void Drone::getHit(const int damage_amount, vec2 rel_pos) {
-	shield_recharge_delay = 120;
-
-	if (current_shield > 0) {
-		hit_anim_counter = 2;
-		hit_direction = normalized(rel_pos);
-	}
-
-	current_shield -= damage_amount;
-	if (current_shield < 0) {
-		current_hull -= -current_shield;
-		current_shield = 0;
+	const int shield_leak = shield.getHit(damage_amount, rel_pos);
+	if (shield_leak > 0) {
+		current_hull -= shield_leak;
 		if (current_hull < 0) {
 			current_hull = 0;
 		}

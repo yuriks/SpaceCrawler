@@ -81,6 +81,7 @@
     <ClCompile Include="src\hud.cpp" />
     <ClCompile Include="src\objects\Bullet.cpp" />
     <ClCompile Include="src\objects\Debris.cpp" />
+    <ClCompile Include="src\objects\Shield.cpp" />
     <ClCompile Include="src\render\debug_sprite.cpp" />
     <ClCompile Include="src\objects\Drone.cpp" />
     <ClCompile Include="src\util\geometry.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="src\objects\Bullet.hpp" />
     <ClInclude Include="src\objects\Camera.hpp" />
     <ClInclude Include="src\objects\Debris.hpp" />
+    <ClInclude Include="src\objects\Shield.hpp" />
     <ClInclude Include="src\render\debug_sprite.hpp" />
     <ClInclude Include="src\RenderState.hpp" />
     <ClInclude Include="src\objects\Drone.hpp" />

@@ -1,6 +1,7 @@
 #pragma once
 #include "Rigidbody.hpp"
 #include "util/util.hpp"
+#include "Shield.hpp"
 #include <bitset>
 #include <vector>
 
@@ -21,16 +22,12 @@ struct Drone {
 	};
 
 	Rigidbody rb;
+	Shield shield;
 
 	int current_hull;
 	int max_hull;
-	int current_shield;
-	int max_shield;
-	int shield_recharge_delay;
 
 	int anim_counter;
-	int hit_anim_counter;
-	vec2 hit_direction;
 	AnimationFlags::Bitset anim_flags;
 
 	void init(RandomGenerator& rng);
