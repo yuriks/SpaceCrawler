@@ -2,7 +2,7 @@
 
 #include "stb_image.h"
 #include "gl/gl_1_5.h"
-#include "resources.hpp"
+#include "util/resources.hpp"
 #include <memory>
 #include <cassert>
 

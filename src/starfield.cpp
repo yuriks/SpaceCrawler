@@ -1,9 +1,9 @@
 #include "RenderState.hpp"
 #include <limits>
-#include "util.hpp"
+#include "util/util.hpp"
 #include <array>
-#include "SpriteBuffer.hpp"
-#include "Camera.hpp"
+#include "render/SpriteBuffer.hpp"
+#include "objects/Camera.hpp"
 
 static const int starfield_sector_size = 512/2;
 static const int max_stars_per_sector = 32;

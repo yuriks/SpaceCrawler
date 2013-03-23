@@ -1,6 +1,6 @@
 #pragma once
-#include "Position.hpp"
-#include "vec2.hpp"
+#include "util/Position.hpp"
+#include "util/vec2.hpp"
 
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 600;

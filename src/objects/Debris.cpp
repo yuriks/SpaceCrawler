@@ -1,6 +1,6 @@
 #include "Debris.hpp"
 
-#include "SpriteBuffer.hpp"
+#include "render/SpriteBuffer.hpp"
 #include "Camera.hpp"
 
 void Debris::update() {

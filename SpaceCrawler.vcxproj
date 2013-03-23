@@ -78,54 +78,54 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="libs\src\stb_image.c" />
-    <ClCompile Include="src\Bullet.cpp" />
-    <ClCompile Include="src\Debris.cpp" />
-    <ClCompile Include="src\debug_sprite.cpp" />
-    <ClCompile Include="src\Drone.cpp" />
-    <ClCompile Include="src\geometry.cpp" />
+    <ClCompile Include="src\objects\Bullet.cpp" />
+    <ClCompile Include="src\objects\Debris.cpp" />
+    <ClCompile Include="src\render\debug_sprite.cpp" />
+    <ClCompile Include="src\objects\Drone.cpp" />
+    <ClCompile Include="src\util\geometry.cpp" />
     <ClCompile Include="src\gl\gl_1_5.c" />
-    <ClCompile Include="src\graphics_init.cpp" />
+    <ClCompile Include="src\render\graphics_init.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\resources.cpp" />
-    <ClCompile Include="src\Ship.cpp" />
-    <ClCompile Include="src\SpriteBuffer.cpp" />
+    <ClCompile Include="src\util\resources.cpp" />
+    <ClCompile Include="src\objects\Ship.cpp" />
+    <ClCompile Include="src\render\SpriteBuffer.cpp" />
     <ClCompile Include="src\starfield.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Full</Optimization>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
     </ClCompile>
-    <ClCompile Include="src\text.cpp" />
-    <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\vec2.cpp" />
+    <ClCompile Include="src\render\text.cpp" />
+    <ClCompile Include="src\render\texture.cpp" />
+    <ClCompile Include="src\util\vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\include\GL\glfw.h" />
     <ClInclude Include="libs\include\stb_image.h" />
-    <ClInclude Include="src\Bullet.hpp" />
-    <ClInclude Include="src\Camera.hpp" />
-    <ClInclude Include="src\Debris.hpp" />
-    <ClInclude Include="src\debug_sprite.hpp" />
+    <ClInclude Include="src\objects\Bullet.hpp" />
+    <ClInclude Include="src\objects\Camera.hpp" />
+    <ClInclude Include="src\objects\Debris.hpp" />
+    <ClInclude Include="src\render\debug_sprite.hpp" />
     <ClInclude Include="src\RenderState.hpp" />
-    <ClInclude Include="src\Drone.hpp" />
-    <ClInclude Include="src\Fixed.hpp" />
-    <ClInclude Include="src\GameState.hpp" />
+    <ClInclude Include="src\objects\Drone.hpp" />
+    <ClInclude Include="src\util\Fixed.hpp" />
+    <ClInclude Include="src\objects\GameState.hpp" />
     <ClInclude Include="src\game_types.hpp" />
-    <ClInclude Include="src\geometry.hpp" />
+    <ClInclude Include="src\util\geometry.hpp" />
     <ClInclude Include="src\gl\Buffer.hpp" />
     <ClInclude Include="src\gl\gl_1_5.h" />
     <ClInclude Include="src\gl\Texture.hpp" />
-    <ClInclude Include="src\graphics_init.hpp" />
-    <ClInclude Include="src\Position.hpp" />
-    <ClInclude Include="src\resources.hpp" />
-    <ClInclude Include="src\PhysParticle.hpp" />
-    <ClInclude Include="src\Rigidbody.hpp" />
-    <ClInclude Include="src\Ship.hpp" />
-    <ClInclude Include="src\Sprite.hpp" />
-    <ClInclude Include="src\SpriteBuffer.hpp" />
+    <ClInclude Include="src\render\graphics_init.hpp" />
+    <ClInclude Include="src\util\Position.hpp" />
+    <ClInclude Include="src\util\resources.hpp" />
+    <ClInclude Include="src\objects\PhysParticle.hpp" />
+    <ClInclude Include="src\objects\Rigidbody.hpp" />
+    <ClInclude Include="src\objects\Ship.hpp" />
+    <ClInclude Include="src\render\Sprite.hpp" />
+    <ClInclude Include="src\render\SpriteBuffer.hpp" />
     <ClInclude Include="src\starfield.hpp" />
-    <ClInclude Include="src\text.hpp" />
-    <ClInclude Include="src\texture.hpp" />
-    <ClInclude Include="src\util.hpp" />
-    <ClInclude Include="src\vec2.hpp" />
+    <ClInclude Include="src\render\text.hpp" />
+    <ClInclude Include="src\render\texture.hpp" />
+    <ClInclude Include="src\util\util.hpp" />
+    <ClInclude Include="src\util\vec2.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\msvc110\GLFW.lib" />

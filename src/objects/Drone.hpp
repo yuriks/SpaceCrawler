@@ -1,6 +1,6 @@
 #pragma once
 #include "Rigidbody.hpp"
-#include "util.hpp"
+#include "util/util.hpp"
 #include <bitset>
 #include <vector>
 

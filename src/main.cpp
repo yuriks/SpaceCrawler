@@ -14,18 +14,18 @@
 #include <ios>
 #include <iomanip>
 #include <numeric>
-#include "util.hpp"
-#include "Fixed.hpp"
-#include "SpriteBuffer.hpp"
-#include "vec2.hpp"
-#include "graphics_init.hpp"
-#include "texture.hpp"
+#include "util/util.hpp"
+#include "util/Fixed.hpp"
+#include "render/SpriteBuffer.hpp"
+#include "util/vec2.hpp"
+#include "render/graphics_init.hpp"
+#include "render/texture.hpp"
 #include "game_types.hpp"
-#include "GameState.hpp"
+#include "objects/GameState.hpp"
 #include "RenderState.hpp"
-#include "debug_sprite.hpp"
-#include "geometry.hpp"
-#include "text.hpp"
+#include "render/debug_sprite.hpp"
+#include "util/geometry.hpp"
+#include "render/text.hpp"
 #include "starfield.hpp"
 
 std::string formatFrametimeFloat(double x) {

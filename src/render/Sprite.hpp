@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "vec2.hpp"
+#include "util/vec2.hpp"
 #include <cstdint>
 
 typedef std::array<uint8_t, 4> Color;

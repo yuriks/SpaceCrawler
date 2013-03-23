@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <memory>
-#include "resources.hpp"
+#include "util/resources.hpp"
 
 bool initWindow(int width, int height) {
 	if (!glfwInit()) {

@@ -1,6 +1,6 @@
 #pragma once
 #include "PhysParticle.hpp"
-#include "vec2.hpp"
+#include "util/vec2.hpp"
 
 struct Rigidbody : PhysParticle {
 	vec2 orientation;

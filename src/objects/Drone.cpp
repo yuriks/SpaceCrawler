@@ -1,10 +1,10 @@
 #include "Drone.hpp"
 
-#include "SpriteBuffer.hpp"
+#include "render/SpriteBuffer.hpp"
 #include "GameState.hpp"
-#include "debug_sprite.hpp"
+#include "render/debug_sprite.hpp"
 #include "Camera.hpp"
-#include "text.hpp"
+#include "render/text.hpp"
 #include <array>
 
 static const int STROBE_INTERVAL = 60*3;

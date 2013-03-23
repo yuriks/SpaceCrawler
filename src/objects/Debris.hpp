@@ -1,6 +1,6 @@
 #pragma once
 #include "Rigidbody.hpp"
-#include "Sprite.hpp"
+#include "render/Sprite.hpp"
 
 struct SpriteBuffer;
 struct Camera;

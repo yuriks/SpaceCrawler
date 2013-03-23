@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SpriteBuffer.hpp"
+#include "render/SpriteBuffer.hpp"
 
 struct RenderState {
 	SpriteBufferIndices sprite_buffer_indices;

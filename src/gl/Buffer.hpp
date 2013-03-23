@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include "gl/gl_1_5.h"
-#include "util.hpp"
+#include "util/util.hpp"
 
 namespace gl {
 

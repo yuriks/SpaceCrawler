@@ -1,6 +1,6 @@
 #include "Ship.hpp"
 
-#include "SpriteBuffer.hpp"
+#include "render/SpriteBuffer.hpp"
 #include "GameState.hpp"
 #include "Bullet.hpp"
 #include "Camera.hpp"

@@ -7,7 +7,7 @@
 #include "texture.hpp"
 #include "gl/Buffer.hpp"
 #include "Sprite.hpp"
-#include "vec2.hpp"
+#include "util/vec2.hpp"
 
 struct VertexData {
 	GLfloat pos_x, pos_y;
