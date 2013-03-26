@@ -28,6 +28,7 @@
 #include "render/text.hpp"
 #include "starfield.hpp"
 #include "hud.hpp"
+#include "tools/tools_main.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -141,7 +142,14 @@ void updateScene(GameState& game_state) {
 	game_state.camera.pos = game_state.player_ship.rb.pos;
 }
 
-int main() {
+int main(int argc, const char* argv[]) {
+
+#ifndef NDEBUG
+	if (argc >= 2 && strcmp(argv[1], "-t") == 0) {
+		return tools_main(argc - 2, argv + 2);
+	}
+#endif
+
 	if (!initWindow(WINDOW_WIDTH, WINDOW_HEIGHT)) {
 		std::cerr << "Failed to initialize window.\n";
 		return 1;

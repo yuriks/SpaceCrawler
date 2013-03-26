@@ -1,6 +1,7 @@
 *.swp
 
-/data_src
+/data/
+*.xcf
 
 /Debug
 /Release
