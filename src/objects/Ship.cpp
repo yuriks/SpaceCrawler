@@ -8,10 +8,17 @@
 static const IntRect img_ship_body   = {1,  1, 32, 24};
 static const IntRect img_ship_thrust = {1, 26, 32, 24};
 static const IntRect img_ship_brake  = {1, 51, 32, 24};
+static const IntRect img_shield_hit  = {42, 94, 16, 32}; // TODO create radius 24 shield sprite
 
 void Ship::init() {
 	rb.orientation = vec2_x;
 	shoot_cooldown = 0;
+
+	shield.max_level = 50;
+	shield.hit_recharge_delay = 10;
+	shield.img_shield_hit = img_shield_hit;
+	shield.shield_radius = 24;
+	shield.init();
 }
 
 void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
@@ -33,6 +40,8 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 		ship_spr.img = img_ship_brake;
 		sprite_buffer.append(ship_spr, matrix);
 	}
+
+	shield.draw(sprite_buffer, ship_spr.x, ship_spr.y);
 }
 
 void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
@@ -81,5 +90,6 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 		--shoot_cooldown;
 	}
 
+	shield.update();
 	rb.update();
 }

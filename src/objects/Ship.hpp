@@ -1,6 +1,7 @@
 #pragma once
 #include "game_types.hpp"
 #include "Rigidbody.hpp"
+#include "Shield.hpp"
 #include <bitset>
 
 struct SpriteBuffer;
@@ -21,6 +22,7 @@ struct Ship {
 	};
 
 	Rigidbody rb;
+	Shield shield;
 
 	int shoot_cooldown;
 
