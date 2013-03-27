@@ -74,7 +74,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 
 	Sprite mouse_cursor;
-	mouse_cursor.setImg(10, 48, 11, 11);
+	mouse_cursor.img = draw_state.sprite_db.lookup("ui_crosshair");
 	mouse_cursor.color = hud_color;
 	mouse_cursor.setPos(game_state.mouse_x - 5, game_state.mouse_y - 5);
 	draw_state.ui_buffer.append(mouse_cursor);
@@ -185,7 +185,10 @@ int main(int argc, const char* argv[]) {
 	draw_state.background_buffer.texture = loadTexture("background.png");
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
+
 	draw_state.ui_buffer.texture = loadTexture("ui.png");
+	draw_state.sprite_db.loadFromCsv("ui.csv");
+	initUiFont(draw_state.sprite_db);
 
 	CHECK_GL_ERROR;
 

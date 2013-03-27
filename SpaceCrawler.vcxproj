@@ -85,6 +85,7 @@
     <ClCompile Include="src\objects\Shield.cpp" />
     <ClCompile Include="src\render\debug_sprite.cpp" />
     <ClCompile Include="src\objects\Drone.cpp" />
+    <ClCompile Include="src\render\SpriteDb.cpp" />
     <ClCompile Include="src\tools\atlas_packer.cpp" />
     <ClCompile Include="src\tools\tools_main.cpp" />
     <ClCompile Include="src\util\geometry.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="src\render\debug_sprite.hpp" />
     <ClInclude Include="src\RenderState.hpp" />
     <ClInclude Include="src\objects\Drone.hpp" />
+    <ClInclude Include="src\render\SpriteDb.hpp" />
     <ClInclude Include="src\tools\atlas_packer.hpp" />
     <ClInclude Include="src\tools\tools_main.hpp" />
     <ClInclude Include="src\util\Fixed.hpp" />

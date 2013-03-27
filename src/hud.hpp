@@ -2,6 +2,9 @@
 
 struct FontInfo;
 struct Color;
+struct SpriteDb;
 
-extern const FontInfo ui_font;
+extern FontInfo ui_font;
 extern const Color hud_color;
+
+void initUiFont(const SpriteDb& sprite_db);
