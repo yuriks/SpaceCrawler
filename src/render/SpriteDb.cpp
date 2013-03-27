@@ -37,3 +37,17 @@ void SpriteDb::loadFromCsv(const std::string& filename) {
 		sprite_db.insert(std::make_pair(id, r));
 	}
 }
+
+std::vector<IntRect> SpriteDb::lookupSequence(const std::string& id_prefix) const {
+	std::vector<IntRect> seq;
+	int frame = 1;
+
+	auto i = sprite_db.find(id_prefix + std::to_string(frame));
+	while (i != sprite_db.end()) {
+		seq.push_back(i->second);
+		++frame;
+		i = sprite_db.find(id_prefix + std::to_string(frame));
+	}
+
+	return seq;
+}

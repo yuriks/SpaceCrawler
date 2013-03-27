@@ -185,16 +185,7 @@ int main(int argc, const char* argv[]) {
 
 	draw_state.background_buffer.texture = loadTexture("background.png");
 	draw_state.sprite_db.loadFromCsv("background.csv");
-	{
-		auto& v = draw_state.background_star_types;
-		auto& db = draw_state.sprite_db;
-		v.push_back(db.lookup("star1"));
-		v.push_back(db.lookup("star2"));
-		v.push_back(db.lookup("star3"));
-		v.push_back(db.lookup("star4"));
-		v.push_back(db.lookup("star5"));
-		v.push_back(db.lookup("star6"));
-	}
+	draw_state.background_star_types = draw_state.sprite_db.lookupSequence("star");
 
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
