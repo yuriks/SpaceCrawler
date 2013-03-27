@@ -71,7 +71,7 @@ bool insertSprite(std::unique_ptr<TreeNode>& node, const LoadedSprite* sprite, i
 	}
 
 	// Sprite fits exactly
-	if (spr_w == rect.w || spr_h == rect.h) {
+	if (spr_w == rect.w && spr_h == rect.h) {
 		node->sprite = sprite;
 		return true;
 	}
