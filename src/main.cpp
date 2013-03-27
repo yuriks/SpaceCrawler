@@ -46,7 +46,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	static const float starfield_parallax = 1.0f / 32.0f;
 	for (int i = 0; i < 4; ++i) {
 		vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) * starfield_parallax * (float)i;
-		drawStarfield(draw_state, i*10, starfield_pos);
+		drawStarfield(draw_state, i*10, starfield_pos, draw_state.background_star_types);
 	}
 
 	for (const Drone& drone : game_state.drones) {
@@ -182,7 +182,20 @@ int main(int argc, const char* argv[]) {
 
 	RenderState draw_state;
 	CHECK_GL_ERROR;
+
 	draw_state.background_buffer.texture = loadTexture("background.png");
+	draw_state.sprite_db.loadFromCsv("background.csv");
+	{
+		auto& v = draw_state.background_star_types;
+		auto& db = draw_state.sprite_db;
+		v.push_back(db.lookup("star1"));
+		v.push_back(db.lookup("star2"));
+		v.push_back(db.lookup("star3"));
+		v.push_back(db.lookup("star4"));
+		v.push_back(db.lookup("star5"));
+		v.push_back(db.lookup("star6"));
+	}
+
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
 

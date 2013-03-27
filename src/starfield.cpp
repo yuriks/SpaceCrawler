@@ -8,17 +8,8 @@
 static const int starfield_sector_size = 512/2;
 static const int max_stars_per_sector = 32;
 
-static const std::array<IntRect, 6> star_types = {{
-	{1, 1, 1, 1},
-	{3, 1, 1, 1},
-	{5, 1, 1, 1},
-	{7, 1, 1, 1},
-	{9, 1, 3, 3},
-	{13, 1, 9, 9}
-}};
-
 static void drawStarfieldSector(
-	RenderState& draw_state, const uint32_t starfield_seed,
+	RenderState& draw_state, const uint32_t starfield_seed, const std::vector<IntRect>& star_types,
 	int16_t sector_x, int16_t sector_y,
 	int sector_x_off, int sector_y_off)
 {
@@ -41,7 +32,7 @@ static void drawStarfieldSector(
 	}
 }
 
-void drawStarfield(RenderState& draw_state, const uint32_t starfield_seed, const vec2 offset) {
+void drawStarfield(RenderState& draw_state, const uint32_t starfield_seed, const vec2 offset, const std::vector<IntRect>& star_types) {
 	int16_t sector_x =  static_cast<int>(offset.x) / starfield_sector_size;
 	int sector_x_off = -static_cast<int>(offset.x) % starfield_sector_size;
 	int16_t sector_y =  static_cast<int>(offset.y) / starfield_sector_size;
@@ -52,7 +43,8 @@ void drawStarfield(RenderState& draw_state, const uint32_t starfield_seed, const
 
 	for (int x = -2; x < sectors_per_width - 1; ++x) {
 		for (int y = -2; y < sectors_per_height - 1; ++y) {
-			drawStarfieldSector(draw_state, starfield_seed, sector_x + x, sector_y + y,
+			drawStarfieldSector(draw_state, starfield_seed, star_types,
+					sector_x + x, sector_y + y,
 					sector_x_off + starfield_sector_size * x, sector_y_off + starfield_sector_size * y);
 		}
 	}
