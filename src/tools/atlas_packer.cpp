@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cassert>
 #include <fstream>
+#include "util/csv.hpp"
 
 // Algorithm from http://www.blackpawn.com/texts/lightmaps/default.html
 
@@ -16,24 +17,40 @@ struct StbiFreeDeleter {
 	}
 };
 
-struct LoadedSprite {
-	std::unique_ptr<uint8_t, StbiFreeDeleter> img_data;
+struct Image {
+	std::unique_ptr<uint8_t, StbiFreeDeleter> data;
 	int width, height;
-	std::string name;
 
-	LoadedSprite() {}
-
-	LoadedSprite(LoadedSprite&& o) :
-		img_data(std::move(o.img_data)), width(o.width), height(o.height), name(std::move(o.name))
+	Image(const std::string& fname) :
+		data(stbi_load(fname.c_str(), &width, &height, nullptr, 4))
 	{}
 
-	LoadedSprite& operator=(LoadedSprite&& o) {
-		img_data = std::move(o.img_data);
+	Image(Image&& o) :
+		data(std::move(o.data)), width(o.width), height(o.height)
+	{}
+
+	Image& operator=(Image&& o) {
+		data = std::move(o.data);
 		width = o.width;
 		height = o.height;
-		name = std::move(o.name);
 		return *this;
 	}
+
+	void copyRect(IntRect src_rect, uint8_t* dst, size_t dst_x, size_t dst_y, size_t dst_stride) const {
+		const uint8_t* in_row = data.get();
+		uint8_t* out_row = dst + dst_y*dst_stride + dst_x*4;
+		for (int y = 0; y < src_rect.h; ++y) {
+			std::copy_n(in_row, src_rect.w*4, out_row);
+			in_row += width*4;
+			out_row += dst_stride;
+		}
+	}
+};
+
+struct LoadedSprite {
+	const Image* img;
+	IntRect rect;
+	std::string name;
 };
 
 struct TreeNode {
@@ -62,8 +79,8 @@ bool insertSprite(std::unique_ptr<TreeNode>& node, const LoadedSprite* sprite, i
 
 	// Empty leaf
 	IntRect& rect = node->img_rectangle;
-	int spr_w = sprite->width + margin;
-	int spr_h = sprite->height + margin;
+	int spr_w = sprite->rect.w + margin;
+	int spr_h = sprite->rect.h + margin;
 
 	// Sprite doesn't fit
 	if (spr_w > rect.w || spr_h > rect.h) {
@@ -123,17 +140,9 @@ std::unique_ptr<TreeNode> packBoxes(const std::vector<LoadedSprite>& sprite_data
 void writeNode(const TreeNode& node, uint8_t* img_data, int img_width, std::ostream& info_file) {
 	if (node.sprite) {
 		const LoadedSprite& spr = *node.sprite;
-		const IntRect& rect = node.img_rectangle;
-
-		const uint8_t* in_row = spr.img_data.get();
-		uint8_t* out_row = img_data + (rect.y*img_width + rect.x)*4;
-		for (int y = 0; y < spr.height; ++y) {
-			std::copy_n(in_row, spr.width*4, out_row);
-			in_row += spr.width*4;
-			out_row += img_width*4;
-		}
-
-		info_file << spr.name << ',' << rect.x << ',' << rect.y << ',' << rect.w << ',' << rect.h << '\n';
+		const IntRect& dst_rect = node.img_rectangle;
+		spr.img->copyRect(spr.rect, img_data, dst_rect.x, dst_rect.y, img_width*4);
+		info_file << spr.name << ',' << dst_rect.x << ',' << dst_rect.y << ',' << dst_rect.w << ',' << dst_rect.h << '\n';
 	} else if (node.children[0]) {
 		assert(node.children[1]);
 		writeNode(*node.children[0], img_data, img_width, info_file);
@@ -170,21 +179,56 @@ bool packSprites(
 	}
 
 	// Load all sprites
+	std::vector<Image> image_data;
+	image_data.reserve(sprite_list.size());
 	std::vector<LoadedSprite> sprite_data;
-	for (auto& file : sprite_list) {
-		LoadedSprite spr;
-		spr.img_data.reset(stbi_load((path_prefix + file + ".png").c_str(), &spr.width, &spr.height, nullptr, 4));
-		if (!spr.img_data) {
-			std::cerr << "Couldn't load " << file << ": " <<stbi_failure_reason() << std::endl;
-			return false;
+	sprite_data.reserve(sprite_data.size()); // A good minimum bound
+
+	for (auto& line : sprite_list) {
+		std::string::size_type cur_pos = 0;
+
+		std::string id = getNextCsvField(line, cur_pos);
+
+		{
+			Image img(path_prefix + id + ".png");
+			if (!img.data) {
+				std::cerr << "Couldn't load " << id << ".png: " <<stbi_failure_reason() << std::endl;
+				return false;
+			}
+			image_data.push_back(std::move(img));
 		}
-		spr.name = file;
-		sprite_data.push_back(std::move(spr));
+
+		LoadedSprite spr;
+		IntRect& r = spr.rect;
+		{
+			IntRect spr_rect = {0, 0, image_data.back().width, image_data.back().height};
+			r = spr_rect;
+		}
+		spr.img = &image_data.back();
+
+		if (cur_pos == std::string::npos) {
+			spr.name = id;
+			sprite_data.push_back(std::move(spr));
+		} else {
+			// Read as spritesheet
+			int i = 1;
+			int sprsheet_w = r.w;
+			int sprsheet_h = r.h;
+			r.w = std::stoi(getNextCsvField(line, cur_pos));
+			r.h = std::stoi(getNextCsvField(line, cur_pos));
+
+			for (r.y = 0; r.y+r.h <= sprsheet_h; r.y += r.h) {
+				for (r.x = 0; r.x+r.w <= sprsheet_w; r.x += r.w) {
+					spr.name = id + std::to_string(i++);
+					sprite_data.push_back(spr);
+				}
+			}
+		}
 	}
 
 	// Sort sprites by largest area
 	std::sort(sprite_data.begin(), sprite_data.end(), [](const LoadedSprite& a, const LoadedSprite& b) {
-		return (a.width * a.height) > (b.width * b.height);
+		return (a.rect.w * a.rect.h) > (b.rect.w * b.rect.h);
 	});
 
 	int best_width;

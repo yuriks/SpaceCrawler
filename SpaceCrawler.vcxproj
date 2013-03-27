@@ -88,6 +88,7 @@
     <ClCompile Include="src\render\SpriteDb.cpp" />
     <ClCompile Include="src\tools\atlas_packer.cpp" />
     <ClCompile Include="src\tools\tools_main.cpp" />
+    <ClCompile Include="src\util\csv.cpp" />
     <ClCompile Include="src\util\geometry.cpp" />
     <ClCompile Include="src\gl\gl_1_5.c" />
     <ClCompile Include="src\render\graphics_init.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="src\render\SpriteDb.hpp" />
     <ClInclude Include="src\tools\atlas_packer.hpp" />
     <ClInclude Include="src\tools\tools_main.hpp" />
+    <ClInclude Include="src\util\csv.hpp" />
     <ClInclude Include="src\util\Fixed.hpp" />
     <ClInclude Include="src\objects\GameState.hpp" />
     <ClInclude Include="src\game_types.hpp" />
