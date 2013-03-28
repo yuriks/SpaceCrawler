@@ -142,7 +142,7 @@ void writeNode(const TreeNode& node, uint8_t* img_data, int img_width, std::ostr
 		const LoadedSprite& spr = *node.sprite;
 		const IntRect& dst_rect = node.img_rectangle;
 		spr.img->copyRect(spr.rect, img_data, dst_rect.x, dst_rect.y, img_width*4);
-		info_file << spr.name << ',' << dst_rect.x << ',' << dst_rect.y << ',' << dst_rect.w << ',' << dst_rect.h << '\n';
+		info_file << spr.name << ',' << dst_rect.x << ',' << dst_rect.y << ',' << spr.rect.w << ',' << spr.rect.h << '\n';
 	} else if (node.children[0]) {
 		assert(node.children[1]);
 		writeNode(*node.children[0], img_data, img_width, info_file);
