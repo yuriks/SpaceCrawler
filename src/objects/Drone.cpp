@@ -1,6 +1,7 @@
 #include "Drone.hpp"
 
 #include "render/SpriteBuffer.hpp"
+#include "render/SpriteDb.hpp"
 #include "GameState.hpp"
 #include "render/debug_sprite.hpp"
 #include "Camera.hpp"
@@ -10,31 +11,24 @@
 
 static const int STROBE_INTERVAL = 60*3;
 
-static const IntRect img_body          = {34,  1, 24, 24};
-static const IntRect img_strobe_yellow = {34, 26, 24, 24};
-static const IntRect img_strobe_red    = {34, 51, 24, 24};
-static const IntRect img_shield_hit    = {42, 94, 16, 32};
-
-static const std::array<IntRect, 4> img_debris = {{
-	{41, 76, 8, 8},
-	{50, 76, 8, 8},
-	{41, 85, 8, 8},
-	{50, 85, 8, 8}
-}};
-
-void Drone::init(RandomGenerator& rng) {
+void Drone::init(RandomGenerator& rng, const SpriteDb& sprite_db) {
 	max_hull = 10;
 	current_hull = max_hull;
 
 	shield.max_level = 20;
 	shield.hit_recharge_delay = 120;
 	shield.recharge_interval = 10;
-	shield.img_shield_hit = img_shield_hit;
+	shield.img_shield_hit = sprite_db.lookup("shield24_hit");
 	shield.init();
 
 	rb.setOrientation(randRange(rng, 0.0f, DOUBLE_PI));
 	rb.setAngularVel(randRange(rng, -DOUBLE_PI*0.003f, DOUBLE_PI*0.003f));
 	anim_counter = randRange(rng, 0, STROBE_INTERVAL-1);
+
+	img_body          = sprite_db.lookup("drone1");
+	img_strobe_yellow = sprite_db.lookup("drone2");
+	img_strobe_red    = sprite_db.lookup("drone3");
+	img_debris        = sprite_db.lookupSequence("drone_debris");
 }
 
 void Drone::draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Camera& camera) const {

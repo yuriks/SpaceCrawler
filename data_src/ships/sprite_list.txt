@@ -1,0 +1,4 @@
+player_ship,32,24
+drone,24,24
+drone_debris,8,8
+shield24_hit

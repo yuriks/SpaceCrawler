@@ -6,6 +6,7 @@
 #include <vector>
 
 struct SpriteBuffer;
+struct SpriteDb;
 struct Camera;
 struct FontInfo;
 struct Debris;
@@ -29,8 +30,12 @@ struct Drone {
 
 	int anim_counter;
 	AnimationFlags::Bitset anim_flags;
+	IntRect img_body;
+	IntRect img_strobe_yellow;
+	IntRect img_strobe_red;
+	std::vector<IntRect> img_debris;
 
-	void init(RandomGenerator& rng);
+	void init(RandomGenerator& rng, const SpriteDb& sprite_db);
 	void draw(SpriteBuffer& sprite_buffer, SpriteBuffer& ui_buffer, const Camera& camera) const;
 	void update();
 	void getHit(const int damage_amount, vec2 rel_pos);

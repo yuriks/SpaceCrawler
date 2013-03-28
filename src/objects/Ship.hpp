@@ -28,8 +28,12 @@ struct Ship {
 	int shoot_cooldown;
 
 	AnimationFlags::Bitset anim_flags;
+	IntRect img_ship_body;
+	IntRect img_ship_thrust;
+	IntRect img_ship_brake;
+	IntRect img_bullet;
 
-	void init();
+	void init(const SpriteDb& sprite_db);
 	void draw(SpriteBuffer& sprite_buffer, const Camera& camera) const;
-	void update(InputButtons::Bitset& input, GameState& game_state, const SpriteDb& sprite_db);
+	void update(InputButtons::Bitset& input, GameState& game_state);
 };

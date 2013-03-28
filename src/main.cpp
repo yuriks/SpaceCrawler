@@ -100,7 +100,7 @@ void updateScene(GameState& game_state, const SpriteDb& sprite_db) {
 	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
 
-	game_state.player_ship.update(input, game_state, sprite_db);
+	game_state.player_ship.update(input, game_state);
 	for (Bullet& bullet : game_state.bullets) {
 		bullet.update();
 	}
@@ -189,6 +189,7 @@ int main(int argc, const char* argv[]) {
 	draw_state.background_star_types = sprite_db.lookupSequence("star");
 
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
+	sprite_db.loadFromCsv("ships.csv");
 
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
 	sprite_db.loadFromCsv("bullets.csv");
@@ -208,13 +209,13 @@ int main(int argc, const char* argv[]) {
 
 	{
 		Ship& ship = game_state.player_ship;
-		ship.init();
+		ship.init(sprite_db);
 		ship.rb.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
 
 	game_state.drones.resize(24);
 	for (Drone& drone : game_state.drones) {
-		drone.init(rng);
+		drone.init(rng, sprite_db);
 		drone.rb.pos = mPosition(
 			randRange(rng, -WINDOW_WIDTH,  2 * WINDOW_WIDTH  - 1),
 			randRange(rng, -WINDOW_HEIGHT, 2 * WINDOW_HEIGHT - 1));

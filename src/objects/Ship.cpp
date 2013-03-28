@@ -6,20 +6,20 @@
 #include "Camera.hpp"
 #include "render/SpriteDb.hpp"
 
-static const IntRect img_ship_body   = {1,  1, 32, 24};
-static const IntRect img_ship_thrust = {1, 26, 32, 24};
-static const IntRect img_ship_brake  = {1, 51, 32, 24};
-static const IntRect img_shield_hit  = {42, 94, 16, 32}; // TODO create radius 24 shield sprite
-
-void Ship::init() {
+void Ship::init(const SpriteDb& sprite_db) {
 	rb.orientation = vec2_x;
 	shoot_cooldown = 0;
 
 	shield.max_level = 50;
 	shield.hit_recharge_delay = 10;
-	shield.img_shield_hit = img_shield_hit;
-	shield.shield_radius = 24;
+	shield.img_shield_hit = sprite_db.lookup("shield24_hit"); // TODO create radius 32 shield sprite
+	shield.shield_radius = 32;
 	shield.init();
+
+	img_ship_body   = sprite_db.lookup("player_ship1");
+	img_ship_thrust = sprite_db.lookup("player_ship2");
+	img_ship_brake  = sprite_db.lookup("player_ship3");
+	img_bullet      = sprite_db.lookup("bullet_pulse_a");
 }
 
 void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
@@ -45,7 +45,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	shield.draw(sprite_buffer, ship_spr.x, ship_spr.y);
 }
 
-void Ship::update(InputButtons::Bitset& input, GameState& game_state, const SpriteDb& sprite_db) {
+void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 	static const vec2 turning_vel = complex_from_angle(TURNING_SPEED);
 
@@ -83,7 +83,7 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state, const Spri
 		bullet.physp.pos = rb.pos;
 		bullet.orientation = rb.orientation;
 		bullet.physp.vel = rb.vel + 4.0f * rb.orientation;
-		bullet.img = sprite_db.lookup("bullet_pulse_a");
+		bullet.img = img_bullet;
 
 		game_state.bullets.push_back(bullet);
 		shoot_cooldown = 5;
