@@ -5,6 +5,7 @@
 #include <bitset>
 
 struct SpriteBuffer;
+struct SpriteDb;
 struct GameState;
 struct Camera;
 
@@ -30,5 +31,5 @@ struct Ship {
 
 	void init();
 	void draw(SpriteBuffer& sprite_buffer, const Camera& camera) const;
-	void update(InputButtons::Bitset& input, GameState& game_state);
+	void update(InputButtons::Bitset& input, GameState& game_state, const SpriteDb& sprite_db);
 };

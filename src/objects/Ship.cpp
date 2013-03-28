@@ -4,6 +4,7 @@
 #include "GameState.hpp"
 #include "Bullet.hpp"
 #include "Camera.hpp"
+#include "render/SpriteDb.hpp"
 
 static const IntRect img_ship_body   = {1,  1, 32, 24};
 static const IntRect img_ship_thrust = {1, 26, 32, 24};
@@ -44,7 +45,7 @@ void Ship::draw(SpriteBuffer& sprite_buffer, const Camera& camera) const {
 	shield.draw(sprite_buffer, ship_spr.x, ship_spr.y);
 }
 
-void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
+void Ship::update(InputButtons::Bitset& input, GameState& game_state, const SpriteDb& sprite_db) {
 	static const float TURNING_SPEED = radiansFromDegrees(5.0f);
 	static const vec2 turning_vel = complex_from_angle(TURNING_SPEED);
 
@@ -82,6 +83,7 @@ void Ship::update(InputButtons::Bitset& input, GameState& game_state) {
 		bullet.physp.pos = rb.pos;
 		bullet.orientation = rb.orientation;
 		bullet.physp.vel = rb.vel + 4.0f * rb.orientation;
+		bullet.img = sprite_db.lookup("bullet_pulse_a");
 
 		game_state.bullets.push_back(bullet);
 		shoot_cooldown = 5;

@@ -36,7 +36,7 @@ std::string formatFrametimeFloat(double x) {
 	return ss.str();
 }
 
-void drawScene(const GameState& game_state, RenderState& draw_state) {
+void drawScene(const GameState& game_state, RenderState& draw_state, const SpriteDb& sprite_db) {
 	/* Draw scene */
 	draw_state.background_buffer.clear();
 	draw_state.sprite_buffer.clear();
@@ -74,7 +74,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 
 	Sprite mouse_cursor;
-	mouse_cursor.img = draw_state.sprite_db.lookup("ui_crosshair");
+	mouse_cursor.img = sprite_db.lookup("ui_crosshair");
 	mouse_cursor.color = hud_color;
 	mouse_cursor.setPos(game_state.mouse_x - 5, game_state.mouse_y - 5);
 	draw_state.ui_buffer.append(mouse_cursor);
@@ -87,7 +87,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
-void updateScene(GameState& game_state) {
+void updateScene(GameState& game_state, const SpriteDb& sprite_db) {
 	InputButtons::Bitset& input = game_state.input;
 	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
@@ -100,7 +100,7 @@ void updateScene(GameState& game_state) {
 	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
 
-	game_state.player_ship.update(input, game_state);
+	game_state.player_ship.update(input, game_state, sprite_db);
 	for (Bullet& bullet : game_state.bullets) {
 		bullet.update();
 	}
@@ -181,18 +181,21 @@ int main(int argc, const char* argv[]) {
 	initDebugSprites();
 
 	RenderState draw_state;
+	SpriteDb sprite_db;
 	CHECK_GL_ERROR;
 
 	draw_state.background_buffer.texture = loadTexture("background.png");
-	draw_state.sprite_db.loadFromCsv("background.csv");
-	draw_state.background_star_types = draw_state.sprite_db.lookupSequence("star");
+	sprite_db.loadFromCsv("background.csv");
+	draw_state.background_star_types = sprite_db.lookupSequence("star");
 
 	draw_state.sprite_buffer.texture = loadTexture("ships.png");
+
 	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
+	sprite_db.loadFromCsv("bullets.csv");
 
 	draw_state.ui_buffer.texture = loadTexture("ui.png");
-	draw_state.sprite_db.loadFromCsv("ui.csv");
-	initUiFont(draw_state.sprite_db);
+	sprite_db.loadFromCsv("ui.csv");
+	initUiFont(sprite_db);
 
 	CHECK_GL_ERROR;
 
@@ -238,7 +241,7 @@ int main(int argc, const char* argv[]) {
 		if (++frametimes_pos >= frametimes.size()) frametimes_pos = 0;
 
 		while (update_time > 0.0) {
-			updateScene(game_state);
+			updateScene(game_state, sprite_db);
 			update_time -= TIMESTEP;
 		}
 
@@ -248,7 +251,7 @@ int main(int argc, const char* argv[]) {
 		game_state.frametime_avg = std::accumulate(frametimes.cbegin(), frametimes.cend(), 0.0) / frametimes.size();
 		game_state.fps = 1.f / game_state.frametime_avg;
 
-		drawScene(game_state, draw_state);
+		drawScene(game_state, draw_state, sprite_db);
 		drawDebugSprites(draw_state.sprite_buffer_indices);
 
 		glfwSwapBuffers();

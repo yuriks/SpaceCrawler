@@ -13,6 +13,4 @@ struct RenderState {
 	SpriteBuffer sprite_buffer;
 	SpriteBuffer bullet_buffer;
 	SpriteBuffer ui_buffer;
-
-	SpriteDb sprite_db;
 };
