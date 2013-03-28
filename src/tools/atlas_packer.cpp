@@ -37,7 +37,7 @@ struct Image {
 	}
 
 	void copyRect(IntRect src_rect, uint8_t* dst, size_t dst_x, size_t dst_y, size_t dst_stride) const {
-		const uint8_t* in_row = data.get();
+		const uint8_t* in_row = data.get() + (src_rect.y*width + src_rect.x)*4;
 		uint8_t* out_row = dst + dst_y*dst_stride + dst_x*4;
 		for (int y = 0; y < src_rect.h; ++y) {
 			std::copy_n(in_row, src_rect.w*4, out_row);
